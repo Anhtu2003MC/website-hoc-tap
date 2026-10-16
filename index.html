@@ -38,7 +38,7 @@
 'use strict';
 const STORE_KEY='hoctot_assignments_v1', HISTORY_KEY='hoctot_history_v1', NOTES_KEY='hoctot_notes_v1';
 // CẤU HÌNH KHO ĐỀ DÙNG CHUNG: điền URL dự án Supabase và khóa anon/publishable của dự án. KHÔNG dùng service_role key ở trình duyệt.
-const SUPABASE_CONFIG={url:'https://lbjeffrdlcveyxkjhcrj.supabase.co/rest/v1/',anonKey:'sb_publishable_idQXo44aVwdEc0js98hjYQ_gizxIO9_',table:'hoctot_papers'};
+const SUPABASE_CONFIG={url:'https://lbjeffrdlcveyxkjhcrj.supabase.co/rest/v1/',anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxiamVmZnJkbGN2ZXl4a2poY3JqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5OTEwNTQsImV4cCI6MjEwNzU2NzA1NH0.cBaP-dJS60hbHriWEvld5vnk34EWr9oqp4rXCid-7tY',table:'hoctot_papers'};
 const state={page:'dashboard',assignments:load(STORE_KEY,[]),history:load(HISTORY_KEY,[]),notes:load(NOTES_KEY,[]),repositoryPapers:[],repositoryStatus:'not-configured',repositoryError:'',repoSearch:'',repoSubject:'',draft:{title:'',subject:'',group:'',duration:30,description:'',questionText:'',answerText:'',questions:[],keyMap:{},qFile:'',aFile:''},editingId:null,test:null,lastAttempt:null,historySearch:'',mistakeSearch:''};
 let timer=null, toastTimer=null;
 const view=document.getElementById('view');
