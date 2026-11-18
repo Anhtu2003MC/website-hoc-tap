@@ -1,1540 +1,356 @@
-<!DOCTYPE html>
-<html lang="vi" class="dark">
+<!doctype html>
+<html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DonutSMP Craft & Profit Optimizer</title>
-    <!-- Tải Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Inter & JetBrains Mono cho số liệu -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome cho biểu tượng -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        donut: {
-                            bg: '#121212',
-                            card: '#1e1e24',
-                            input: '#27272f',
-                            border: '#32323e',
-                            emerald: '#10b981',
-                            gold: '#f59e0b',
-                            red: '#ef4444'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            background-color: #121212;
-            color: #e5e7eb;
-        }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #121212;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #32323e;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #4b5563;
-        }
-        .mc-shadow {
-            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Donut Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--plum:#2a1830;--plum2:#3b2446;--glaze:#e8559a;--mint:#1f9d8f;--ink:#241a2b;--bg:#f7f4f8;--card:#fff;--line:#e4dce8;--muted:#7b6d86;--bad:#c0392b;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--ink:#f1eaf4;--bg:#17101b;--card:#211727;--line:#372a40;--muted:#a393ae;color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font:15px/1.5 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);display:flex}
+a{color:var(--glaze);text-decoration:none}a:hover{text-decoration:underline}
+#side{width:260px;flex:none;background:var(--plum);color:#e9dff0;display:flex;flex-direction:column;height:100%;overflow-y:auto;padding:18px 12px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;padding:2px 8px 16px;color:#fff}
+.grp{font-size:12.5px;color:#a994b5;margin:16px 8px 4px}
+#side a.nav{display:block;padding:7px 10px;border-radius:8px;color:#e9dff0;font-size:14.5px;border-left:3px solid transparent}
+#side a.nav:hover{background:var(--plum2);text-decoration:none}
+#side a.nav.on{background:var(--plum2);border-left-color:var(--glaze);color:#fff;font-weight:600}
+#quota{margin-top:auto;padding:14px 8px 0;font-size:12.5px;color:#a994b5;border-top:1px solid var(--plum2)}
+#wrap{flex:1;min-width:0;height:100%;overflow-y:auto}
+#top{display:none;position:sticky;top:0;z-index:5;background:var(--plum);color:#fff;padding:10px 14px;align-items:center;gap:10px}
+#top button{background:none;border:0;color:#fff;font-size:22px;cursor:pointer}
+main{padding:26px 30px 60px;max-width:1180px}
+h1{font-size:26px;font-weight:800;margin:0 0 2px}
+.sub{color:var(--muted);margin:0 0 18px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px;align-items:center}
+input,select,button{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 11px}
+input{min-width:220px}
+button{background:var(--glaze);color:#fff;border-color:var(--glaze);cursor:pointer;font-weight:600}
+button.ghost{background:var(--card);color:var(--ink);border-color:var(--line)}
+button:hover{filter:brightness(1.06)}
+:focus-visible{outline:2px solid var(--mint);outline-offset:2px}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-bottom:18px}
+.st{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.st b{display:block;font-size:22px;font-weight:800;line-height:1.2}
+.st span{color:var(--muted);font-size:13px}
+.tw{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%}
+th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-weight:600;color:var(--muted);font-size:13px}
+tr:last-child td{border-bottom:0}
+.n{text-align:right;font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.err{background:#c0392b18;border:1px solid var(--bad);color:var(--bad);padding:10px 14px;border-radius:8px}
+.note{background:var(--card);border:1px dashed var(--line);border-radius:8px;padding:9px 13px;color:var(--muted);font-size:13.5px;margin:0 0 14px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:16px}
+.chart{width:100%;height:auto;color:var(--glaze)}.chart text{fill:var(--muted);font-size:11px}.chart .g{stroke:var(--line)}
+.feed{background:var(--card);border:1px solid var(--line);border-radius:10px;height:60vh;overflow-y:auto;padding:6px 0}
+.msg{display:flex;gap:10px;padding:3px 14px;align-items:baseline}.msg .au{font-size:12px;flex:none;width:104px;overflow:hidden;text-overflow:ellipsis}.msg .tx{flex:1;word-break:break-word}.msg time{font-size:11.5px;color:var(--muted)}
+.bar2{height:8px;border-radius:4px;background:var(--line);min-width:90px;overflow:hidden}.bar2 i{display:block;height:100%;background:var(--mint)}
+.tag{display:inline-block;padding:1px 8px;border-radius:99px;font-size:12px;background:var(--line)}
+.tag.ok{background:#1f9d8f26;color:var(--mint)}.tag.warn{background:#e8a63a2b;color:#b9770e}.tag.bad{background:#c0392b22;color:var(--bad)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.cards .panel{margin:0}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;background:var(--bad)}.dot.on{background:var(--mint)}
+@media(max-width:820px){#side{position:fixed;z-index:10;left:-270px;transition:left .2s}#side.open{left:0}#top{display:flex}main{padding:18px 14px 50px}}
+@media(prefers-reduced-motion:reduce){#side{transition:none}}
+</style>
 </head>
-<body class="min-h-screen flex flex-col antialiased selection:bg-donut-emerald selection:text-white">
-
-    <!-- Thanh điều hướng / Header -->
-    <header class="bg-donut-card border-b border-donut-border sticky top-0 z-30">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-                    <i class="fa-solid fa-cubes text-white text-xl"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-                        DonutSMP <span class="text-donut-emerald">Craft Optimizer</span>
-                    </h1>
-                    <p id="header-subtitle" class="text-xs text-gray-400">Tính giá nguyên liệu, lời lỗ /ah & tối ưu hóa vốn đầu tư</p>
-                </div>
-            </div>
-
-            <!-- Nút Chuyển Ngôn Ngữ & Export / Import JSON -->
-            <div class="flex flex-wrap items-center justify-center gap-2">
-                <!-- Bộ chuyển đổi ngôn ngữ VN / EN -->
-                <div class="flex items-center bg-donut-input border border-donut-border rounded-lg p-0.5 mr-1">
-                    <button id="lang-btn-vi" onclick="setLanguage('vi')" class="px-2.5 py-1 text-xs font-bold rounded-md transition bg-donut-emerald text-gray-950">
-                        VN
-                    </button>
-                    <button id="lang-btn-en" onclick="setLanguage('en')" class="px-2.5 py-1 text-xs font-bold rounded-md transition text-gray-400 hover:text-white">
-                        EN
-                    </button>
-                </div>
-
-                <button onclick="openJsonModal('export')" class="px-3 py-2 text-xs font-medium bg-donut-input hover:bg-gray-700 text-gray-200 border border-donut-border rounded-lg transition flex items-center gap-2">
-                    <i class="fa-solid fa-file-export text-donut-gold"></i> <span id="btn-export-text">Xuất JSON</span>
-                </button>
-                <button onclick="openJsonModal('import')" class="px-3 py-2 text-xs font-medium bg-donut-input hover:bg-gray-700 text-gray-200 border border-donut-border rounded-lg transition flex items-center gap-2">
-                    <i class="fa-solid fa-file-import text-donut-emerald"></i> <span id="btn-import-text">Nhập JSON</span>
-                </button>
-                <button id="btn-reset-defaults" onclick="resetToDefaults()" title="Khôi phục công thức mẫu mặc định" class="px-3 py-2 text-xs font-medium bg-donut-input hover:bg-red-900/40 text-gray-400 hover:text-red-400 border border-donut-border rounded-lg transition">
-                    <i class="fa-solid fa-rotate-left"></i>
-                </button>
-
-                <!-- Nút chuyển sang trang còn lại -->
-                <a href="index.html" class="px-3 py-2 text-xs font-bold bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 rounded-lg transition flex items-center gap-2">
-                    <i class="fa-solid fa-arrow-left"></i> <span>Về bản chính</span>
-                </a>
-            </div>
-        </div>
-    </header>
-
-    <!-- Thông báo Toast (Thay thế alert) -->
-    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
-
-    <!-- Nội dung chính -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        
-        <!-- Khu vực 1: Công thức đã lưu (Saved Recipes) -->
-        <section class="bg-donut-card border border-donut-border rounded-2xl p-5 mb-6 mc-shadow">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-bookmark text-donut-gold"></i>
-                    <h2 id="saved-recipes-title" class="font-semibold text-white">Công thức đã lưu & Mẫu có sẵn</h2>
-                    <span id="recipe-count" class="text-xs bg-donut-input text-gray-300 px-2 py-0.5 rounded-full border border-donut-border">0</span>
-                </div>
-                
-                <div class="flex flex-wrap items-center gap-2 flex-grow md:max-w-xl justify-end">
-                    <select id="saved-recipes-select" onchange="loadSelectedRecipe()" class="flex-grow bg-donut-input border border-donut-border text-white text-sm rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-donut-emerald transition">
-                        <option value="">-- Chọn một công thức để tải --</option>
-                    </select>
-                    <button onclick="deleteCurrentRecipe()" id="btn-delete-recipe" class="px-3.5 py-2.5 bg-red-500/10 hover:bg-red-500/20 text-donut-red border border-red-500/30 rounded-xl text-sm font-medium transition flex items-center gap-1.5" title="Xóa công thức đang chọn">
-                        <i class="fa-solid fa-trash-can"></i> <span id="btn-delete-text" class="hidden sm:inline">Xóa</span>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Lưới 2 cột chính -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            
-            <!-- CỘT TRÁI (7 phần): Tạo / Chỉnh sửa Công thức -->
-            <div class="lg:col-span-7 flex flex-col gap-6">
-                <section class="bg-donut-card border border-donut-border rounded-2xl p-6 mc-shadow">
-                    <div class="flex items-center justify-between border-b border-donut-border pb-4 mb-5">
-                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-hammer text-donut-emerald"></i>
-                            <span id="craft-section-title">Thông tin Vật phẩm & Nguyên liệu</span>
-                        </h2>
-                        <span id="unit-hint-badge" class="text-xs text-gray-400 bg-donut-input px-2.5 py-1 rounded-lg">Hỗ trợ nhập: 10k, 1.5m, 2b...</span>
-                    </div>
-
-                    <!-- Thông tin Item đầu ra -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 mb-6 bg-donut-bg/60 p-4 rounded-xl border border-donut-border/70">
-                        <div class="sm:col-span-5">
-                            <label id="label-output-name" class="block text-xs font-medium text-gray-400 mb-1.5">Tên vật phẩm đầu ra (Output)</label>
-                            <input type="text" id="output-name" placeholder="VD: End Crystal" oninput="calculateAll()"
-                                class="w-full bg-donut-input border border-donut-border rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-donut-emerald transition">
-                        </div>
-                        <div class="sm:col-span-3">
-                            <label id="label-output-qty" class="block text-xs font-medium text-gray-400 mb-1.5">SL nhận / 1 lần craft</label>
-                            <input type="number" id="output-qty" value="1" min="1" oninput="calculateAll()"
-                                class="w-full bg-donut-input border border-donut-border rounded-xl px-3.5 py-2.5 text-white font-mono text-sm focus:outline-none focus:border-donut-emerald transition">
-                        </div>
-                        <div class="sm:col-span-4">
-                            <label id="label-output-price" class="block text-xs font-medium text-gray-400 mb-1.5">Giá bán 1 cái (/ah)</label>
-                            <div class="relative">
-                                <span class="absolute left-3 top-2.5 text-donut-emerald font-mono text-sm">$</span>
-                                <input type="text" id="output-price" placeholder="VD: 150k" oninput="calculateAll()"
-                                    class="w-full bg-donut-input border border-donut-border rounded-xl pl-7 pr-3 py-2.5 text-white font-mono text-sm focus:outline-none focus:border-donut-emerald transition">
-                            </div>
-                            <div id="output-price-preview" class="text-[11px] text-gray-400 font-mono mt-1 text-right">$0</div>
-                        </div>
-                    </div>
-
-                    <!-- Danh sách Nguyên liệu -->
-                    <div class="mb-4 flex items-center justify-between gap-3 flex-wrap">
-                        <h3 id="ingredients-list-title" class="text-sm font-semibold text-gray-200">Danh sách nguyên liệu cần thiết</h3>
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <button id="btn-donut-api-sync" onclick="syncDonutApiPrices()" title="Lấy giá vật phẩm từ danh sách Buy Orders (/v1/orders)" class="px-3 py-1.5 bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-wait">
-                                <i class="fa-solid fa-cloud-arrow-down"></i> <span id="btn-donut-api-sync-text">Đồng bộ giá Donut API</span>
-                            </button>
-                            <button onclick="addIngredientRow()" class="px-3 py-1.5 bg-donut-emerald/15 hover:bg-donut-emerald/25 text-donut-emerald border border-donut-emerald/30 rounded-lg text-xs font-semibold transition flex items-center gap-1.5">
-                                <i class="fa-solid fa-plus"></i> <span id="btn-add-ing-text">Thêm nguyên liệu</span>
-                            </button>
-                        </div>
-                    </div>
-                    <p id="donut-api-status" class="text-[11px] text-gray-500 -mt-2 mb-3" aria-live="polite">Lấy giá từ /v1/orders theo item và price_each. Đây là giá người chơi đang đặt mua, không phải giá rao bán thấp nhất trên AH.</p>
-
-                    <!-- Header cột nguyên liệu (Desktop) -->
-                    <div class="hidden sm:grid sm:grid-cols-12 gap-2 px-2 mb-2 text-xs font-medium text-gray-400">
-                        <div id="th-ing-name" class="col-span-5">Tên nguyên liệu</div>
-                        <div id="th-ing-qty" class="col-span-2 text-center">SL cần</div>
-                        <div id="th-ing-price" class="col-span-4">Giá mua 1 cái (/ah)</div>
-                        <div id="th-ing-del" class="col-span-1 text-center">Xóa</div>
-                    </div>
-
-                    <!-- Container chứa các dòng nguyên liệu -->
-                    <div id="ingredients-list" class="flex flex-col gap-3 mb-6">
-                        <!-- Các dòng nguyên liệu sẽ được render bằng JS -->
-                    </div>
-
-                    <!-- Nút hành động Lưu Công Thức -->
-                    <div class="pt-4 border-t border-donut-border flex flex-col sm:flex-row items-center justify-between gap-3">
-                        <button id="btn-clear-form" onclick="clearForm()" class="w-full sm:w-auto px-4 py-2.5 bg-donut-input hover:bg-gray-700 text-gray-300 rounded-xl text-sm font-medium transition">
-                            Làm mới ô nhập
-                        </button>
-                        <button onclick="saveCurrentRecipe()" class="w-full sm:w-auto px-6 py-2.5 bg-donut-emerald hover:bg-emerald-600 text-gray-950 font-bold rounded-xl text-sm shadow-lg shadow-emerald-500/20 transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-floppy-disk"></i> <span id="btn-save-recipe-text">Lưu Công Thức Này</span>
-                        </button>
-                    </div>
-                </section>
-            </div>
-
-            <!-- CỘT PHẢI (5 phần): Kết quả Lợi nhuận & Tối ưu Vốn -->
-            <div class="lg:col-span-5 flex flex-col gap-6">
-                
-                <!-- Card 1: Hiệu quả trên 1 lần Craft -->
-                <section class="bg-donut-card border border-donut-border rounded-2xl p-6 mc-shadow">
-                    <h2 class="text-lg font-bold text-white flex items-center gap-2 border-b border-donut-border pb-4 mb-5">
-                        <i class="fa-solid fa-chart-line text-donut-gold"></i>
-                        <span id="single-analysis-title">Phân tích 1 lần Craft</span>
-                    </h2>
-
-                    <div class="grid grid-cols-2 gap-3 mb-4">
-                        <div class="bg-donut-bg p-3.5 rounded-xl border border-donut-border">
-                            <div id="label-single-cost" class="text-xs text-gray-400 mb-1">Chi phí nguyên liệu</div>
-                            <div id="single-cost" class="text-lg font-bold font-mono text-white">$0</div>
-                            <div id="single-cost-exact" class="text-[11px] text-gray-500 font-mono">0</div>
-                        </div>
-                        <div class="bg-donut-bg p-3.5 rounded-xl border border-donut-border">
-                            <div id="label-single-revenue" class="text-xs text-gray-400 mb-1">Doanh thu bán ra</div>
-                            <div id="single-revenue" class="text-lg font-bold font-mono text-donut-gold">$0</div>
-                            <div id="single-revenue-exact" class="text-[11px] text-gray-500 font-mono">0</div>
-                        </div>
-                    </div>
-
-                    <!-- Box Lợi nhuận ròng -->
-                    <div id="single-profit-box" class="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 flex items-center justify-between">
-                        <div>
-                            <div id="label-single-profit" class="text-xs font-medium text-gray-300">Lợi nhuận ròng (Net Profit)</div>
-                            <div id="single-profit" class="text-2xl font-bold font-mono text-donut-emerald mt-0.5">$0</div>
-                            <div id="single-profit-exact" class="text-xs font-mono text-gray-400">0</div>
-                        </div>
-                        <div class="text-right">
-                            <div id="label-single-roi" class="text-xs text-gray-400 mb-1">Tỷ suất (ROI)</div>
-                            <span id="single-roi" class="inline-block px-3 py-1 rounded-lg font-mono font-bold text-sm bg-emerald-500/20 text-donut-emerald">
-                                0%
-                            </span>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Card 2: Bộ Tối ưu hóa theo Vốn (Capital Optimizer) -->
-                <section class="bg-donut-card border border-donut-border rounded-2xl p-6 mc-shadow">
-                    <div class="flex items-center justify-between border-b border-donut-border pb-4 mb-5">
-                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-sack-dollar text-donut-emerald"></i>
-                            <span id="optimizer-title">Tối ưu hóa theo Vốn</span>
-                        </h2>
-                        <span class="text-xs font-mono text-donut-gold bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded">1 Stack = 64</span>
-                    </div>
-
-                    <!-- Ô nhập Vốn hiện có -->
-                    <div class="mb-5">
-                        <div class="flex justify-between items-center mb-1.5">
-                            <label id="label-capital" class="text-xs font-medium text-gray-300">Tổng vốn hiện có (Balance / Budget)</label>
-                            <span id="capital-preview" class="text-xs font-mono text-donut-emerald font-semibold">$0</span>
-                        </div>
-                        <div class="relative">
-                            <span class="absolute left-3.5 top-3 text-donut-gold font-mono font-bold">$</span>
-                            <input type="text" id="capital-input" value="1m" placeholder="Nhập vốn (VD: 500k, 2.5m, 10b...)" oninput="calculateAll()"
-                                class="w-full bg-donut-input border border-donut-border rounded-xl pl-8 pr-4 py-3 text-white font-mono text-base font-bold focus:outline-none focus:border-donut-gold transition">
-                        </div>
-                        <!-- Các nút chọn nhanh mức vốn -->
-                        <div class="flex flex-wrap gap-1.5 mt-2">
-                            <button onclick="setCapital('100k')" class="px-2.5 py-1 text-xs font-mono bg-donut-input hover:bg-gray-700 text-gray-300 rounded-lg border border-donut-border transition">$100K</button>
-                            <button onclick="setCapital('500k')" class="px-2.5 py-1 text-xs font-mono bg-donut-input hover:bg-gray-700 text-gray-300 rounded-lg border border-donut-border transition">$500K</button>
-                            <button onclick="setCapital('1m')" class="px-2.5 py-1 text-xs font-mono bg-donut-input hover:bg-gray-700 text-gray-300 rounded-lg border border-donut-border transition">$1M</button>
-                            <button onclick="setCapital('5m')" class="px-2.5 py-1 text-xs font-mono bg-donut-input hover:bg-gray-700 text-gray-300 rounded-lg border border-donut-border transition">$5M</button>
-                            <button onclick="setCapital('25m')" class="px-2.5 py-1 text-xs font-mono bg-donut-input hover:bg-gray-700 text-gray-300 rounded-lg border border-donut-border transition">$25M</button>
-                            <button onclick="setCapital('100m')" class="px-2.5 py-1 text-xs font-mono bg-donut-input hover:bg-gray-700 text-gray-300 rounded-lg border border-donut-border transition">$100M</button>
-                        </div>
-                    </div>
-
-                    <!-- Thống kê kết quả tối ưu -->
-                    <div class="grid grid-cols-2 gap-3 mb-5">
-                        <div class="bg-donut-bg p-3 rounded-xl border border-donut-border">
-                            <div id="label-max-crafts" class="text-xs text-gray-400">Số lần craft tối đa</div>
-                            <div id="opt-max-crafts" class="text-xl font-bold font-mono text-white mt-0.5">0 lần</div>
-                        </div>
-                        <div class="bg-donut-bg p-3 rounded-xl border border-donut-border">
-                            <div id="label-total-items" class="text-xs text-gray-400">Tổng thành phẩm thu về</div>
-                            <div id="opt-total-items" class="text-xl font-bold font-mono text-donut-gold mt-0.5">0 cái</div>
-                            <div id="opt-total-stacks" class="text-[11px] text-gray-400 font-mono">0 stack</div>
-                        </div>
-                    </div>
-
-                    <!-- Bảng kê chi tiết đi chợ (Shopping List) -->
-                    <div class="mb-5">
-                        <div class="flex items-center justify-between mb-2">
-                            <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400">
-                                <i class="fa-solid fa-cart-shopping mr-1 text-donut-emerald"></i> <span id="shopping-list-title">Danh sách cần mua (/ah)</span>
-                            </h3>
-                            <button onclick="copyShoppingList()" class="text-xs text-donut-emerald hover:underline flex items-center gap-1">
-                                <i class="fa-regular fa-copy"></i> <span id="btn-copy-list-text">Copy danh sách</span>
-                            </button>
-                        </div>
-                        
-                        <div class="bg-donut-bg rounded-xl border border-donut-border overflow-hidden">
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-left border-collapse">
-                                    <thead>
-                                        <tr class="border-b border-donut-border text-[11px] text-gray-400 bg-donut-input/50">
-                                            <th id="th-shop-ing" class="py-2.5 px-3">Nguyên liệu</th>
-                                            <th id="th-shop-qty" class="py-2.5 px-3 text-right">Tổng SL (Stack)</th>
-                                            <th id="th-shop-cost" class="py-2.5 px-3 text-right">Thành tiền</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="shopping-list-body" class="divide-y divide-donut-border/50 text-xs">
-                                        <!-- Render bằng JS -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tổng kết dòng tiền -->
-                    <div class="bg-donut-bg rounded-xl p-4 border border-donut-border space-y-2 text-sm">
-                        <div class="flex justify-between text-gray-400">
-                            <span id="label-cap-used">Vốn thực tế sử dụng:</span>
-                            <span id="opt-capital-used" class="font-mono text-white font-medium">$0</span>
-                        </div>
-                        <div class="flex justify-between text-gray-400">
-                            <span id="label-cap-rem">Tiền thừa còn lại:</span>
-                            <span id="opt-remaining" class="font-mono text-gray-300">$0</span>
-                        </div>
-                        <div class="flex justify-between text-gray-400 pt-2 border-t border-donut-border/70">
-                            <span id="label-tot-rev">Tổng doanh thu dự kiến:</span>
-                            <span id="opt-total-revenue" class="font-mono text-donut-gold font-semibold">$0</span>
-                        </div>
-                        <div class="flex justify-between items-center pt-1">
-                            <span id="label-tot-prof" class="font-semibold text-white">Tổng lợi nhuận dự kiến:</span>
-                            <span id="opt-total-profit" class="font-mono text-lg font-bold text-donut-emerald">$0</span>
-                        </div>
-                    </div>
-
-                </section>
-            </div>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="border-t border-donut-border py-5 text-center text-xs text-gray-500 mt-8">
-        <p id="footer-text">DonutSMP Craft & Profit Calculator • Công cụ hỗ trợ tính toán kinh tế cho người chơi Minecraft</p>
-    </footer>
-
-    <!-- Modal Xuất / Nhập JSON -->
-    <div id="json-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-donut-card border border-donut-border rounded-2xl max-w-lg w-full p-6 mc-shadow">
-            <div class="flex items-center justify-between border-b border-donut-border pb-3 mb-4">
-                <h3 id="modal-title" class="text-base font-bold text-white">Xuất dữ liệu Công thức (JSON)</h3>
-                <button onclick="closeJsonModal()" class="text-gray-400 hover:text-white">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-            <p id="modal-desc" class="text-xs text-gray-400 mb-3">
-                Sao chép đoạn mã bên dưới để lưu trữ hoặc chia sẻ bộ công thức của bạn với bạn bè trên Discord.
-            </p>
-            <textarea id="json-textarea" rows="7" class="w-full bg-donut-bg border border-donut-border rounded-xl p-3 text-xs font-mono text-gray-200 focus:outline-none focus:border-donut-emerald mb-4" placeholder="Dán mã JSON công thức vào đây..."></textarea>
-            <div class="flex justify-end gap-2">
-                <button id="modal-close-btn" onclick="closeJsonModal()" class="px-4 py-2 bg-donut-input hover:bg-gray-700 text-gray-300 rounded-xl text-xs font-medium">Đóng</button>
-                <button id="modal-action-btn" onclick="handleJsonAction()" class="px-4 py-2 bg-donut-emerald hover:bg-emerald-600 text-gray-950 font-bold rounded-xl text-xs">Sao chép mã</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- JAVASCRIPT XỬ LÝ LOGIC -->
-    <script>
-        // ==========================================
-        // 0. TỪ ĐIỂN SONG NGỮ (VIETNAMESE / ENGLISH)
-        // ==========================================
-        const I18N = {
-            vi: {
-                headerSubtitle: 'Tính giá nguyên liệu, lời lỗ /ah & tối ưu hóa vốn đầu tư',
-                btnExport: 'Xuất JSON',
-                btnImport: 'Nhập JSON',
-                resetTooltip: 'Khôi phục công thức mẫu mặc định',
-                savedRecipesTitle: 'Công thức đã lưu & Mẫu có sẵn',
-                selectRecipeDefault: '-- Chọn công thức đã lưu --',
-                recipeSellPrefix: 'Bán',
-                btnDelete: 'Xóa',
-                deleteTooltip: 'Xóa công thức đang chọn',
-                craftSectionTitle: 'Thông tin Vật phẩm & Nguyên liệu',
-                unitHintBadge: 'Hỗ trợ nhập: 10k, 1.5m, 2b...',
-                labelOutputName: 'Tên vật phẩm đầu ra (Output)',
-                phOutputName: 'VD: End Crystal',
-                labelOutputQty: 'SL nhận / 1 lần craft',
-                labelOutputPrice: 'Giá bán 1 cái (Buy Orders)',
-                phOutputPrice: 'VD: 150k',
-                ingredientsListTitle: 'Danh sách nguyên liệu cần thiết',
-                btnAddIng: 'Thêm nguyên liệu',
-                btnSyncDonutApi: 'Đồng bộ giá Donut API',
-                apiSyncHint: 'Lấy giá từ /v1/orders theo item và price_each • Đây là giá người chơi đang đặt mua, không phải giá rao bán thấp nhất trên AH',
-                apiSyncLoading: 'Đang truy vấn Donut API...',
-                apiSyncDone: (updated, total, outputUpdated, matched, count) => `Đã cập nhật giá Order: ${updated}/${total} nguyên liệu; thành phẩm: ${outputUpdated ? 'đã có giá' : 'chưa có giá'} (${matched} vật phẩm khớp từ ${count} lệnh).`,
-                apiSyncNoPrice: 'Không tìm thấy giá phù hợp; các ô giá tương ứng được giữ nguyên.',
-                thIngName: 'Tên nguyên liệu',
-                thIngQty: 'SL cần',
-                thIngPrice: 'Giá tham chiếu 1 cái (Buy Orders)',
-                thIngDel: 'Xóa',
-                mobIngName: 'Tên nguyên liệu',
-                mobIngQty: 'SL cần / craft',
-                mobIngPrice: 'Giá mua 1 cái (/ah)',
-                phIngName: 'VD: Nether Star',
-                phIngPrice: 'VD: 50k',
-                delRowTooltip: 'Xóa dòng này',
-                btnClearForm: 'Làm mới ô nhập',
-                btnSaveRecipe: 'Lưu Công Thức Này',
-                singleAnalysisTitle: 'Phân tích 1 lần Craft',
-                labelSingleCost: 'Chi phí nguyên liệu',
-                labelSingleRevenue: 'Doanh thu bán ra',
-                labelSingleProfit: 'Lợi nhuận ròng (Net Profit)',
-                labelSingleRoi: 'Tỷ suất (ROI)',
-                optimizerTitle: 'Tối ưu hóa theo Vốn',
-                labelCapital: 'Tổng vốn hiện có (Balance / Budget)',
-                phCapital: 'Nhập vốn (VD: 500k, 2.5m, 10b...)',
-                labelMaxCrafts: 'Số lần craft tối đa',
-                labelTotalItems: 'Tổng thành phẩm thu về',
-                shoppingListTitle: 'Danh sách cần mua (/ah)',
-                btnCopyList: 'Copy danh sách',
-                thShopIng: 'Nguyên liệu',
-                thShopQty: 'Tổng SL (Stack)',
-                thShopCost: 'Thành tiền',
-                noIngredientsRow: 'Chưa có nguyên liệu nào',
-                labelCapUsed: 'Vốn thực tế sử dụng:',
-                labelCapRem: 'Tiền thừa còn lại:',
-                labelTotRev: 'Tổng doanh thu dự kiến:',
-                labelTotProf: 'Tổng lợi nhuận dự kiến:',
-                footerText: 'DonutSMP Craft & Profit Calculator • Công cụ hỗ trợ tính toán kinh tế cho người chơi Minecraft',
-                modalExportTitle: 'Xuất dữ liệu Công thức (JSON)',
-                modalExportDesc: 'Sao chép đoạn mã bên dưới để lưu trữ hoặc gửi cho bạn bè cùng dùng trên DonutSMP.',
-                modalExportBtn: 'Sao chép mã JSON',
-                modalImportTitle: 'Nhập dữ liệu Công thức (JSON)',
-                modalImportDesc: 'Dán đoạn mã JSON công thức mà bạn bè đã chia sẻ vào ô bên dưới để thêm vào danh sách.',
-                modalImportBtn: 'Nhập công thức',
-                modalPlaceholder: 'Dán mã JSON công thức vào đây...',
-                modalCloseBtn: 'Đóng',
-                unitItem: 'cái',
-                unitTimes: 'lần',
-                unnamedIng: 'Nguyên liệu chưa đặt tên',
-                toastLoaded: (name) => `Đã tải công thức: ${name}`,
-                toastEnterName: 'Vui lòng nhập Tên vật phẩm đầu ra trước khi lưu!',
-                toastNeedIng: 'Cần ít nhất 1 nguyên liệu để lưu công thức!',
-                toastUpdated: (name) => `Đã cập nhật công thức "${name}"!`,
-                toastSaved: (name) => `Đã lưu công thức mới "${name}"!`,
-                toastSelectDel: 'Hãy chọn một công thức trong danh sách để xóa.',
-                toastDeleted: (name) => `Đã xóa công thức "${name}"`,
-                toastReset: 'Đã khôi phục danh sách công thức mẫu DonutSMP!',
-                toastKeepOneRow: 'Phải giữ lại ít nhất 1 dòng nguyên liệu!',
-                toastCopiedList: 'Đã sao chép danh sách đi chợ vào khay nhớ tạm!',
-                toastCopiedJson: 'Đã sao chép mã JSON vào khay nhớ tạm!',
-                toastImported: (count) => `Đã nhập thành công ${count} công thức!`,
-                toastNoValidJson: 'Không tìm thấy công thức hợp lệ trong mã JSON.',
-                toastInvalidJson: 'Mã JSON bị lỗi cú pháp! Vui lòng kiểm tra lại.',
-                copyHeader: (name) => `🛒 DANH SÁCH MUA ĐỒ DONUTSMP - CRAFT: ${name.toUpperCase()}`,
-                copyCrafts: (crafts, items) => `• Số lần craft: ${crafts} (Thu về: ${items})`,
-                copyCap: (cap) => `• Vốn cần dùng: ${cap}`,
-                copyProf: (prof) => `• Lợi nhuận dự kiến: ${prof}`
-            },
-            en: {
-                headerSubtitle: 'Calculate material costs, /ah profit & optimize crafting budget',
-                btnExport: 'Export JSON',
-                btnImport: 'Import JSON',
-                resetTooltip: 'Restore default preset recipes',
-                savedRecipesTitle: 'Saved Recipes & Presets',
-                selectRecipeDefault: '-- Select a saved recipe --',
-                recipeSellPrefix: 'Sell',
-                btnDelete: 'Delete',
-                deleteTooltip: 'Delete selected recipe',
-                craftSectionTitle: 'Output Item & Ingredients',
-                unitHintBadge: 'Supports: 10k, 1.5m, 2b...',
-                labelOutputName: 'Output Item Name',
-                phOutputName: 'e.g. End Crystal',
-                labelOutputQty: 'Output Qty / Craft',
-                labelOutputPrice: 'Sell Price / Each (Buy Orders)',
-                phOutputPrice: 'e.g. 150k',
-                ingredientsListTitle: 'Required Ingredients',
-                btnAddIng: 'Add Ingredient',
-                btnSyncDonutApi: 'Sync Donut API prices',
-                apiSyncHint: 'Reads item and price_each from /v1/orders • This is the price buyers offer, not the lowest AH listing price',
-                apiSyncLoading: 'Querying Donut API...',
-                apiSyncDone: (updated, total, outputUpdated, matched, count) => `Updated Order prices: ${updated}/${total} ingredients; output: ${outputUpdated ? 'found' : 'not found'} (${matched} matched items from ${count} orders).`,
-                apiSyncNoPrice: 'No matching prices found; corresponding price fields were left unchanged.',
-                thIngName: 'Ingredient Name',
-                thIngQty: 'Qty / Craft',
-                thIngPrice: 'Reference Price / Each (Buy Orders)',
-                thIngDel: 'Del',
-                mobIngName: 'Ingredient Name',
-                mobIngQty: 'Qty / Craft',
-                mobIngPrice: 'Buy Price / Each (/ah)',
-                phIngName: 'e.g. Nether Star',
-                phIngPrice: 'e.g. 50k',
-                delRowTooltip: 'Remove this row',
-                btnClearForm: 'Clear Inputs',
-                btnSaveRecipe: 'Save Recipe',
-                singleAnalysisTitle: 'Single Craft Analysis',
-                labelSingleCost: 'Material Cost',
-                labelSingleRevenue: 'Gross Revenue',
-                labelSingleProfit: 'Net Profit',
-                labelSingleRoi: 'Return (ROI)',
-                optimizerTitle: 'Budget Optimizer',
-                labelCapital: 'Available Balance / Budget',
-                phCapital: 'Enter budget (e.g. 500k, 2.5m, 10b...)',
-                labelMaxCrafts: 'Max Possible Crafts',
-                labelTotalItems: 'Total Output Items',
-                shoppingListTitle: 'Shopping List (/ah)',
-                btnCopyList: 'Copy List',
-                thShopIng: 'Ingredient',
-                thShopQty: 'Total Qty (Stacks)',
-                thShopCost: 'Subtotal',
-                noIngredientsRow: 'No ingredients added yet',
-                labelCapUsed: 'Capital Used:',
-                labelCapRem: 'Remaining Balance:',
-                labelTotRev: 'Expected Total Revenue:',
-                labelTotProf: 'Expected Net Profit:',
-                footerText: 'DonutSMP Craft & Profit Calculator • Economy & Crafting Optimizer for Minecraft Players',
-                modalExportTitle: 'Export Recipes Data (JSON)',
-                modalExportDesc: 'Copy the JSON snippet below to back up or share your recipes with friends on Discord.',
-                modalExportBtn: 'Copy JSON',
-                modalImportTitle: 'Import Recipes Data (JSON)',
-                modalImportDesc: 'Paste the shared recipe JSON code below to add them to your saved list.',
-                modalImportBtn: 'Import Recipes',
-                modalPlaceholder: 'Paste recipe JSON here...',
-                modalCloseBtn: 'Close',
-                unitItem: 'items',
-                unitTimes: 'crafts',
-                unnamedIng: 'Unnamed Ingredient',
-                toastLoaded: (name) => `Loaded recipe: ${name}`,
-                toastEnterName: 'Please enter an Output Item Name before saving!',
-                toastNeedIng: 'At least 1 ingredient is required to save!',
-                toastUpdated: (name) => `Updated recipe "${name}"!`,
-                toastSaved: (name) => `Saved new recipe "${name}"!`,
-                toastSelectDel: 'Please select a recipe from the dropdown to delete.',
-                toastDeleted: (name) => `Deleted recipe "${name}"`,
-                toastReset: 'Restored default DonutSMP preset recipes!',
-                toastKeepOneRow: 'You must keep at least 1 ingredient row!',
-                toastCopiedList: 'Shopping list copied to clipboard!',
-                toastCopiedJson: 'JSON data copied to clipboard!',
-                toastImported: (count) => `Successfully imported ${count} recipe(s)!`,
-                toastNoValidJson: 'No valid recipes found in the JSON data.',
-                toastInvalidJson: 'Invalid JSON syntax! Please check again.',
-                copyHeader: (name) => `🛒 DONUTSMP SHOPPING LIST - CRAFT: ${name.toUpperCase()}`,
-                copyCrafts: (crafts, items) => `• Total Crafts: ${crafts} (Output: ${items})`,
-                copyCap: (cap) => `• Capital Used: ${cap}`,
-                copyProf: (prof) => `• Expected Profit: ${prof}`
-            }
-        };
-
-        const LANG_STORAGE_KEY = 'donutsmp_calc_lang_v1';
-        let currentLang = localStorage.getItem(LANG_STORAGE_KEY) || 'vi';
-
-        function t(key, ...args) {
-            const dict = I18N[currentLang] || I18N.vi;
-            const val = dict[key];
-            return typeof val === 'function' ? val(...args) : (val || key);
-        }
-
-        function setLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem(LANG_STORAGE_KEY, lang);
-            document.documentElement.lang = lang;
-
-            // Cập nhật trạng thái nút VN / EN
-            const btnVi = document.getElementById('lang-btn-vi');
-            const btnEn = document.getElementById('lang-btn-en');
-            if (lang === 'vi') {
-                btnVi.className = 'px-2.5 py-1 text-xs font-bold rounded-md transition bg-donut-emerald text-gray-950';
-                btnEn.className = 'px-2.5 py-1 text-xs font-bold rounded-md transition text-gray-400 hover:text-white';
-            } else {
-                btnEn.className = 'px-2.5 py-1 text-xs font-bold rounded-md transition bg-donut-emerald text-gray-950';
-                btnVi.className = 'px-2.5 py-1 text-xs font-bold rounded-md transition text-gray-400 hover:text-white';
-            }
-
-            // Cập nhật toàn bộ nhãn tĩnh trên DOM
-            document.getElementById('header-subtitle').textContent = t('headerSubtitle');
-            document.getElementById('btn-export-text').textContent = t('btnExport');
-            document.getElementById('btn-import-text').textContent = t('btnImport');
-            document.getElementById('btn-reset-defaults').title = t('resetTooltip');
-
-            document.getElementById('saved-recipes-title').textContent = t('savedRecipesTitle');
-            document.getElementById('btn-delete-text').textContent = t('btnDelete');
-            document.getElementById('btn-delete-recipe').title = t('deleteTooltip');
-
-            document.getElementById('craft-section-title').textContent = t('craftSectionTitle');
-            document.getElementById('unit-hint-badge').textContent = t('unitHintBadge');
-            document.getElementById('label-output-name').textContent = t('labelOutputName');
-            document.getElementById('output-name').placeholder = t('phOutputName');
-            document.getElementById('label-output-qty').textContent = t('labelOutputQty');
-            document.getElementById('label-output-price').textContent = t('labelOutputPrice');
-            document.getElementById('output-price').placeholder = t('phOutputPrice');
-
-            document.getElementById('ingredients-list-title').textContent = t('ingredientsListTitle');
-            document.getElementById('btn-add-ing-text').textContent = t('btnAddIng');
-            document.getElementById('btn-donut-api-sync-text').textContent = t('btnSyncDonutApi');
-            document.getElementById('donut-api-status').textContent = t('apiSyncHint');
-            document.getElementById('th-ing-name').textContent = t('thIngName');
-            document.getElementById('th-ing-qty').textContent = t('thIngQty');
-            document.getElementById('th-ing-price').textContent = t('thIngPrice');
-            document.getElementById('th-ing-del').textContent = t('thIngDel');
-
-            document.getElementById('btn-clear-form').textContent = t('btnClearForm');
-            document.getElementById('btn-save-recipe-text').textContent = t('btnSaveRecipe');
-
-            document.getElementById('single-analysis-title').textContent = t('singleAnalysisTitle');
-            document.getElementById('label-single-cost').textContent = t('labelSingleCost');
-            document.getElementById('label-single-revenue').textContent = t('labelSingleRevenue');
-            document.getElementById('label-single-profit').textContent = t('labelSingleProfit');
-            document.getElementById('label-single-roi').textContent = t('labelSingleRoi');
-
-            document.getElementById('optimizer-title').textContent = t('optimizerTitle');
-            document.getElementById('label-capital').textContent = t('labelCapital');
-            document.getElementById('capital-input').placeholder = t('phCapital');
-            document.getElementById('label-max-crafts').textContent = t('labelMaxCrafts');
-            document.getElementById('label-total-items').textContent = t('labelTotalItems');
-
-            document.getElementById('shopping-list-title').textContent = t('shoppingListTitle');
-            document.getElementById('btn-copy-list-text').textContent = t('btnCopyList');
-            document.getElementById('th-shop-ing').textContent = t('thShopIng');
-            document.getElementById('th-shop-qty').textContent = t('thShopQty');
-            document.getElementById('th-shop-cost').textContent = t('thShopCost');
-
-            document.getElementById('label-cap-used').textContent = t('labelCapUsed');
-            document.getElementById('label-cap-rem').textContent = t('labelCapRem');
-            document.getElementById('label-tot-rev').textContent = t('labelTotRev');
-            document.getElementById('label-tot-prof').textContent = t('labelTotProf');
-
-            document.getElementById('footer-text').textContent = t('footerText');
-            document.getElementById('json-textarea').placeholder = t('modalPlaceholder');
-            document.getElementById('modal-close-btn').textContent = t('modalCloseBtn');
-
-            // Cập nhật các dòng nguyên liệu đang hiển thị
-            document.querySelectorAll('.ingredient-row').forEach(row => {
-                const mobLabels = row.querySelectorAll('.mob-label');
-                if (mobLabels.length === 3) {
-                    mobLabels[0].textContent = t('mobIngName');
-                    mobLabels[1].textContent = t('mobIngQty');
-                    mobLabels[2].textContent = t('mobIngPrice');
-                }
-                row.querySelector('.ing-name').placeholder = t('phIngName');
-                row.querySelector('.ing-price').placeholder = t('phIngPrice');
-                const delBtn = row.querySelector('.del-row-btn');
-                if (delBtn) delBtn.title = t('delRowTooltip');
-            });
-
-            // Re-render dropdown và tính toán lại các đơn vị động
-            if (savedRecipes.length > 0) {
-                renderRecipeDropdown();
-                calculateAll();
-            }
-        }
-
-        // ==========================================
-        // 1. DỮ LIỆU MẪU PHỔ BIẾN TRÊN DONUTSMP
-        // ==========================================
-        const DEFAULT_RECIPES = [
-            {
-                id: 'preset_end_crystal',
-                name: 'End Crystal',
-                outputQty: 1,
-                outputPrice: 120000, // 120k
-                ingredients: [
-                    { name: 'Glass', qty: 7, price: 200 },
-                    { name: 'Eye of Ender', qty: 1, price: 25000 },
-                    { name: 'Ghast Tear', qty: 1, price: 65000 }
-                ]
-            },
-            {
-                id: 'preset_gap',
-                name: 'Golden Apple',
-                outputQty: 1,
-                outputPrice: 45000, // 45k
-                ingredients: [
-                    { name: 'Gold Ingot', qty: 8, price: 4200 },
-                    { name: 'Apple', qty: 1, price: 1500 }
-                ]
-            },
-            {
-                id: 'preset_beacon',
-                name: 'Beacon',
-                outputQty: 1,
-                outputPrice: 1850000, // 1.85m
-                ingredients: [
-                    { name: 'Nether Star', qty: 1, price: 1500000 },
-                    { name: 'Obsidian', qty: 3, price: 1200 },
-                    { name: 'Glass', qty: 5, price: 200 }
-                ]
-            },
-            {
-                id: 'preset_piston',
-                name: 'Piston',
-                outputQty: 1,
-                outputPrice: 8500,
-                ingredients: [
-                    { name: 'Cobblestone', qty: 4, price: 100 },
-                    { name: 'Oak Planks', qty: 3, price: 150 },
-                    { name: 'Iron Ingot', qty: 1, price: 3500 },
-                    { name: 'Redstone Dust', qty: 1, price: 1200 }
-                ]
-            },
-            {
-                id: 'preset_respawn_anchor',
-                name: 'Respawn Anchor',
-                outputQty: 1,
-                outputPrice: 320000,
-                ingredients: [
-                    { name: 'Crying Obsidian', qty: 6, price: 35000 },
-                    { name: 'Glowstone', qty: 3, price: 15000 }
-                ]
-            },
-            {
-                id: 'preset_strength2_pot',
-                name: 'Strength II Potion (x3)',
-                outputQty: 3,
-                outputPrice: 35000, // 35k / bình -> 105k tổng
-                ingredients: [
-                    { name: 'Blaze Powder', qty: 1, price: 12000 },
-                    { name: 'Nether Wart', qty: 1, price: 4000 },
-                    { name: 'Glowstone Dust', qty: 1, price: 5000 },
-                    { name: 'Glass Bottle', qty: 3, price: 300 }
-                ]
-            }
-        ];
-
-        const STORAGE_KEY = 'donutsmp_craft_recipes_v1';
-        let savedRecipes = [];
-        let currentJsonMode = 'export';
-
-        // ==========================================
-        // 2. BỘ PHÂN TÍCH & ĐỊNH DẠNG TIỀN TỆ DONUTSMP
-        // ==========================================
-        
-        /**
-         * Chuyển đổi chuỗi nhập (VD: "1.5m", "100k", "2b", "50,000") thành số thực
-         */
-        function parseDonutMoney(input) {
-            if (typeof input === 'number') return isNaN(input) ? 0 : input;
-            if (!input) return 0;
-
-            // Xóa dấu cách, dấu $, dấu phẩy ngăn cách hàng nghìn
-            let str = input.toString().trim().toLowerCase().replace(/[\$,\s]/g, '');
-            if (!str) return 0;
-
-            const multipliers = {
-                'k': 1e3,
-                'm': 1e6,
-                'b': 1e9,
-                't': 1e12,
-                'q': 1e15
-            };
-
-            const lastChar = str.slice(-1);
-            if (multipliers[lastChar]) {
-                const numPart = parseFloat(str.slice(0, -1));
-                return isNaN(numPart) ? 0 : numPart * multipliers[lastChar];
-            }
-
-            const num = parseFloat(str);
-            return isNaN(num) ? 0 : num;
-        }
-
-        /**
-         * Định dạng số thành chuỗi rút gọn kiểu DonutSMP ($1.5M, $250K...)
-         */
-        function formatShortMoney(num) {
-            if (isNaN(num) || num === 0) return '$0';
-            const absNum = Math.abs(num);
-            const sign = num < 0 ? '-' : '';
-
-            if (absNum >= 1e15) return sign + '$' + (absNum / 1e15).toFixed(2).replace(/\.00$/, '') + 'Q';
-            if (absNum >= 1e12) return sign + '$' + (absNum / 1e12).toFixed(2).replace(/\.00$/, '') + 'T';
-            if (absNum >= 1e9)  return sign + '$' + (absNum / 1e9).toFixed(2).replace(/\.00$/, '') + 'B';
-            if (absNum >= 1e6)  return sign + '$' + (absNum / 1e6).toFixed(2).replace(/\.00$/, '') + 'M';
-            if (absNum >= 1e3)  return sign + '$' + (absNum / 1e3).toFixed(2).replace(/\.00$/, '') + 'K';
-            
-            return sign + '$' + Math.round(absNum).toLocaleString('en-US');
-        }
-
-        /**
-         * Định dạng số nguyên đầy đủ có dấu phẩy (VD: $1,500,000)
-         */
-        function formatExactMoney(num) {
-            if (isNaN(num)) return '$0';
-            const sign = num < 0 ? '-' : '';
-            return sign + '$' + Math.round(Math.abs(num)).toLocaleString('en-US');
-        }
-
-        /**
-         * Quy đổi số lượng item thành Stack (64) + lẻ theo ngôn ngữ hiện tại
-         */
-        function formatStacks(qty) {
-            if (qty <= 0) return '0';
-            const stacks = Math.floor(qty / 64);
-            const remainder = qty % 64;
-            const unit = t('unitItem');
-            if (stacks === 0) return `${remainder} ${unit}`;
-            if (remainder === 0) return `${stacks} stack`;
-            return `${stacks} stack + ${remainder}`;
-        }
-
-        // ==========================================
-        // 3. QUẢN LÝ CÔNG THỨC & LOCALSTORAGE
-        // ==========================================
-
-        function initApp() {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) {
-                try {
-                    savedRecipes = JSON.parse(stored);
-                } catch (e) {
-                    savedRecipes = [...DEFAULT_RECIPES];
-                }
-            } else {
-                savedRecipes = [...DEFAULT_RECIPES];
-                saveToStorage();
-            }
-
-            setLanguage(currentLang);
-            renderRecipeDropdown();
-
-            // Tải công thức đầu tiên làm mặc định để người dùng thấy ngay số liệu
-            if (savedRecipes.length > 0) {
-                document.getElementById('saved-recipes-select').value = savedRecipes[0].id;
-                loadRecipeData(savedRecipes[0]);
-            } else {
-                addIngredientRow();
-                calculateAll();
-            }
-        }
-
-        function saveToStorage() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedRecipes));
-            renderRecipeDropdown();
-        }
-
-        function renderRecipeDropdown() {
-            const select = document.getElementById('saved-recipes-select');
-            const currentVal = select.value;
-            
-            select.innerHTML = `<option value="">${t('selectRecipeDefault')}</option>`;
-            savedRecipes.forEach(recipe => {
-                const option = document.createElement('option');
-                option.value = recipe.id;
-                option.textContent = `${recipe.name} (${t('recipeSellPrefix')}: ${formatShortMoney(recipe.outputPrice)}/${t('unitItem')})`;
-                select.appendChild(option);
-            });
-
-            if (savedRecipes.some(r => r.id === currentVal)) {
-                select.value = currentVal;
-            }
-            document.getElementById('recipe-count').textContent = savedRecipes.length;
-        }
-
-        function loadSelectedRecipe() {
-            const id = document.getElementById('saved-recipes-select').value;
-            if (!id) return;
-            const recipe = savedRecipes.find(r => r.id === id);
-            if (recipe) {
-                loadRecipeData(recipe);
-                showToast(t('toastLoaded', recipe.name), 'success');
-            }
-        }
-
-        function saveToStorage() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedRecipes));
-            renderRecipeDropdown();
-        }
-
-        function renderRecipeDropdown() {
-            const select = document.getElementById('saved-recipes-select');
-            const currentVal = select.value;
-            
-            select.innerHTML = '<option value="">-- Chọn công thức đã lưu --</option>';
-            savedRecipes.forEach(recipe => {
-                const option = document.createElement('option');
-                option.value = recipe.id;
-                option.textContent = `${recipe.name} (Bán: ${formatShortMoney(recipe.outputPrice)}/cái)`;
-                select.appendChild(option);
-            });
-
-            if (savedRecipes.some(r => r.id === currentVal)) {
-                select.value = currentVal;
-            }
-            document.getElementById('recipe-count').textContent = savedRecipes.length;
-        }
-
-        function loadSelectedRecipe() {
-            const id = document.getElementById('saved-recipes-select').value;
-            if (!id) return;
-            const recipe = savedRecipes.find(r => r.id === id);
-            if (recipe) {
-                loadRecipeData(recipe);
-                showToast(`Đã tải công thức: ${recipe.name}`, 'success');
-            }
-        }
-
-        function loadRecipeData(recipe) {
-            document.getElementById('output-name').value = recipe.name;
-            document.getElementById('output-qty').value = recipe.outputQty || 1;
-            document.getElementById('output-price').value = recipe.outputPrice;
-
-            const container = document.getElementById('ingredients-list');
-            container.innerHTML = '';
-
-            if (recipe.ingredients && recipe.ingredients.length > 0) {
-                recipe.ingredients.forEach(ing => {
-                    addIngredientRow(ing.name, ing.qty, ing.price);
-                });
-            } else {
-                addIngredientRow();
-            }
-
-            calculateAll();
-        }
-
-        function saveCurrentRecipe() {
-            const name = document.getElementById('output-name').value.trim();
-            if (!name) {
-                showToast(t('toastEnterName'), 'error');
-                document.getElementById('output-name').focus();
-                return;
-            }
-
-            const outputQty = Math.max(1, parseInt(document.getElementById('output-qty').value) || 1);
-            const outputPrice = parseDonutMoney(document.getElementById('output-price').value);
-            const ingredients = getIngredientsFromDOM();
-
-            if (ingredients.length === 0) {
-                showToast(t('toastNeedIng'), 'error');
-                return;
-            }
-
-            // Kiểm tra xem tên công thức đã tồn tại chưa để cập nhật hoặc tạo mới
-            const existingIndex = savedRecipes.findIndex(r => r.name.toLowerCase() === name.toLowerCase());
-            const recipeId = existingIndex >= 0 ? savedRecipes[existingIndex].id : 'recipe_' + Date.now();
-
-            const newRecipe = {
-                id: recipeId,
-                name,
-                outputQty,
-                outputPrice,
-                ingredients
-            };
-
-            if (existingIndex >= 0) {
-                savedRecipes[existingIndex] = newRecipe;
-                showToast(t('toastUpdated', name), 'success');
-            } else {
-                savedRecipes.unshift(newRecipe);
-                showToast(t('toastSaved', name), 'success');
-            }
-
-            saveToStorage();
-            document.getElementById('saved-recipes-select').value = recipeId;
-        }
-
-        function deleteCurrentRecipe() {
-            const select = document.getElementById('saved-recipes-select');
-            const id = select.value;
-            if (!id) {
-                showToast(t('toastSelectDel'), 'error');
-                return;
-            }
-
-            const recipe = savedRecipes.find(r => r.id === id);
-            savedRecipes = savedRecipes.filter(r => r.id !== id);
-            saveToStorage();
-            showToast(t('toastDeleted', recipe ? recipe.name : ''), 'info');
-        }
-
-        function resetToDefaults() {
-            savedRecipes = [...DEFAULT_RECIPES];
-            saveToStorage();
-            if (savedRecipes.length > 0) {
-                document.getElementById('saved-recipes-select').value = savedRecipes[0].id;
-                loadRecipeData(savedRecipes[0]);
-            }
-            showToast(t('toastReset'), 'success');
-        }
-
-        // ==========================================
-        // 4. QUẢN LÝ DÒNG NGUYÊN LIỆU TRÊN GIAO DIỆN
-        // ==========================================
-
-        function addIngredientRow(name = '', qty = 1, price = '') {
-            const container = document.getElementById('ingredients-list');
-            const row = document.createElement('div');
-            row.className = 'ingredient-row grid grid-cols-1 sm:grid-cols-12 gap-2 bg-donut-bg/60 sm:bg-transparent p-3 sm:p-0 rounded-xl border border-donut-border/50 sm:border-0 items-center';
-
-            row.innerHTML = `
-                <div class="sm:col-span-5">
-                    <label class="mob-label sm:hidden text-[11px] text-gray-400 block mb-1">${t('mobIngName')}</label>
-                    <input type="text" placeholder="${t('phIngName')}" value="${escapeHtml(name)}" oninput="calculateAll()"
-                        class="ing-name w-full bg-donut-input border border-donut-border rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-donut-emerald transition">
-                </div>
-                <div class="sm:col-span-2">
-                    <label class="mob-label sm:hidden text-[11px] text-gray-400 block mb-1">${t('mobIngQty')}</label>
-                    <input type="number" min="1" value="${qty}" oninput="calculateAll()"
-                        class="ing-qty w-full bg-donut-input border border-donut-border rounded-xl px-2.5 py-2 text-white font-mono text-sm text-center focus:outline-none focus:border-donut-emerald transition">
-                </div>
-                <div class="sm:col-span-4">
-                    <label class="mob-label sm:hidden text-[11px] text-gray-400 block mb-1">${t('mobIngPrice')}</label>
-                    <div class="relative">
-                        <span class="absolute left-3 top-2 text-gray-400 font-mono text-sm">$</span>
-                        <input type="text" placeholder="${t('phIngPrice')}" value="${price}" oninput="calculateAll()"
-                            class="ing-price w-full bg-donut-input border border-donut-border rounded-xl pl-6 pr-2.5 py-2 text-white font-mono text-sm focus:outline-none focus:border-donut-emerald transition">
-                    </div>
-                </div>
-                <div class="sm:col-span-1 flex justify-end sm:justify-center mt-1 sm:mt-0">
-                    <button onclick="removeIngredientRow(this)" class="del-row-btn w-9 h-9 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-donut-red flex items-center justify-center transition" title="${t('delRowTooltip')}">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-            `;
-
-            container.appendChild(row);
-            calculateAll();
-        }
-
-        function removeIngredientRow(btn) {
-            const container = document.getElementById('ingredients-list');
-            if (container.children.length <= 1) {
-                showToast(t('toastKeepOneRow'), 'error');
-                return;
-            }
-            btn.closest('.ingredient-row').remove();
-            calculateAll();
-        }
-
-        function clearForm() {
-            document.getElementById('saved-recipes-select').value = '';
-            document.getElementById('output-name').value = '';
-            document.getElementById('output-qty').value = 1;
-            document.getElementById('output-price').value = '';
-            
-            const container = document.getElementById('ingredients-list');
-            container.innerHTML = '';
-            addIngredientRow();
-            calculateAll();
-        }
-
-        function getIngredientsFromDOM() {
-            const rows = document.querySelectorAll('.ingredient-row');
-            const list = [];
-            rows.forEach(row => {
-                const name = row.querySelector('.ing-name').value.trim() || t('unnamedIng');
-                const qty = Math.max(0, parseFloat(row.querySelector('.ing-qty').value) || 0);
-                const price = parseDonutMoney(row.querySelector('.ing-price').value);
-                if (qty > 0) {
-                    list.push({ name, qty, price });
-                }
-            });
-            return list;
-        }
-
-        function setCapital(val) {
-            document.getElementById('capital-input').value = val;
-            calculateAll();
-        }
-
-        // ==========================================
-        // 5. TÍNH TOÁN LỢI NHUẬN & TỐI ƯU HÓA VỐN
-        // ==========================================
-
-        function calculateAll() {
-            // 1. Lấy dữ liệu đầu ra
-            const outputQty = Math.max(1, parseInt(document.getElementById('output-qty').value) || 1);
-            const outputUnitPrice = parseDonutMoney(document.getElementById('output-price').value);
-            document.getElementById('output-price-preview').textContent = formatExactMoney(outputUnitPrice);
-
-            // 2. Lấy dữ liệu nguyên liệu & tính tổng chi phí 1 lần craft
-            const ingredients = getIngredientsFromDOM();
-            let singleCraftCost = 0;
-            ingredients.forEach(ing => {
-                singleCraftCost += ing.qty * ing.price;
-            });
-
-            // 3. Tính doanh thu & lợi nhuận 1 lần craft
-            const singleCraftRevenue = outputQty * outputUnitPrice;
-            const singleCraftProfit = singleCraftRevenue - singleCraftCost;
-            const roi = singleCraftCost > 0 ? ((singleCraftProfit / singleCraftCost) * 100) : (singleCraftRevenue > 0 ? 100 : 0);
-
-            // Cập nhật UI Card 1 (1 lần craft)
-            document.getElementById('single-cost').textContent = formatShortMoney(singleCraftCost);
-            document.getElementById('single-cost-exact').textContent = formatExactMoney(singleCraftCost);
-
-            document.getElementById('single-revenue').textContent = formatShortMoney(singleCraftRevenue);
-            document.getElementById('single-revenue-exact').textContent = formatExactMoney(singleCraftRevenue);
-
-            const profitEl = document.getElementById('single-profit');
-            const profitBox = document.getElementById('single-profit-box');
-            const roiEl = document.getElementById('single-roi');
-
-            profitEl.textContent = formatShortMoney(singleCraftProfit);
-            document.getElementById('single-profit-exact').textContent = formatExactMoney(singleCraftProfit);
-            roiEl.textContent = `${roi >= 0 ? '+' : ''}${roi.toFixed(1)}%`;
-
-            // Đổi màu theo lời / lỗ
-            if (singleCraftProfit >= 0) {
-                profitBox.className = 'bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 flex items-center justify-between transition-colors';
-                profitEl.className = 'text-2xl font-bold font-mono text-donut-emerald mt-0.5';
-                roiEl.className = 'inline-block px-3 py-1 rounded-lg font-mono font-bold text-sm bg-emerald-500/20 text-donut-emerald';
-            } else {
-                profitBox.className = 'bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-center justify-between transition-colors';
-                profitEl.className = 'text-2xl font-bold font-mono text-donut-red mt-0.5';
-                roiEl.className = 'inline-block px-3 py-1 rounded-lg font-mono font-bold text-sm bg-red-500/20 text-donut-red';
-            }
-
-            // 4. Tính toán Tối ưu hóa theo Vốn (Capital Optimizer)
-            const capital = parseDonutMoney(document.getElementById('capital-input').value);
-            document.getElementById('capital-preview').textContent = formatExactMoney(capital);
-
-            let maxCrafts = 0;
-            if (singleCraftCost > 0 && capital >= singleCraftCost) {
-                maxCrafts = Math.floor(capital / singleCraftCost);
-            }
-
-            const totalOutputItems = maxCrafts * outputQty;
-            const totalCapitalUsed = maxCrafts * singleCraftCost;
-            const remainingBalance = Math.max(0, capital - totalCapitalUsed);
-            const totalExpectedRevenue = maxCrafts * singleCraftRevenue;
-            const totalExpectedProfit = maxCrafts * singleCraftProfit;
-
-            // Cập nhật UI Card 2 (Tối ưu vốn)
-            document.getElementById('opt-max-crafts').textContent = `${maxCrafts.toLocaleString('en-US')} ${t('unitTimes')}`;
-            document.getElementById('opt-total-items').textContent = `${totalOutputItems.toLocaleString('en-US')} ${t('unitItem')}`;
-            document.getElementById('opt-total-stacks').textContent = formatStacks(totalOutputItems);
-
-            document.getElementById('opt-capital-used').textContent = formatShortMoney(totalCapitalUsed) + ` (${formatExactMoney(totalCapitalUsed)})`;
-            document.getElementById('opt-remaining').textContent = formatShortMoney(remainingBalance);
-            document.getElementById('opt-total-revenue').textContent = formatShortMoney(totalExpectedRevenue);
-
-            const totalProfitEl = document.getElementById('opt-total-profit');
-            totalProfitEl.textContent = `${totalExpectedProfit >= 0 ? '+' : ''}${formatShortMoney(totalExpectedProfit)}`;
-            totalProfitEl.className = `font-mono text-lg font-bold ${totalExpectedProfit >= 0 ? 'text-donut-emerald' : 'text-donut-red'}`;
-
-            // Render bảng Shopping List
-            renderShoppingList(ingredients, maxCrafts);
-        }
-
-        function renderShoppingList(ingredients, maxCrafts) {
-            const tbody = document.getElementById('shopping-list-body');
-            tbody.innerHTML = '';
-
-            if (ingredients.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="py-4 text-center text-gray-500">${t('noIngredientsRow')}</td></tr>`;
-                return;
-            }
-
-            ingredients.forEach(ing => {
-                const totalNeeded = ing.qty * maxCrafts;
-                const totalCost = totalNeeded * ing.price;
-                const stackText = formatStacks(totalNeeded);
-
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-donut-input/30 transition';
-                tr.innerHTML = `
-                    <td class="py-2.5 px-3 font-medium text-gray-200">
-                        ${escapeHtml(ing.name)}
-                        <div class="text-[10px] text-gray-500 font-mono">${formatShortMoney(ing.price)}/${t('unitItem')}</div>
-                    </td>
-                    <td class="py-2.5 px-3 text-right font-mono">
-                        <div class="text-white font-bold">${totalNeeded.toLocaleString('en-US')}</div>
-                        <div class="text-[10px] text-donut-gold">${stackText}</div>
-                    </td>
-                    <td class="py-2.5 px-3 text-right font-mono text-gray-300 font-medium">
-                        ${formatShortMoney(totalCost)}
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        // ==========================================
-        // 6. TIỆN ÍCH COPY, JSON MODAL & TOAST
-        // ==========================================
-
-        function copyShoppingList() {
-            const outputName = document.getElementById('output-name').value.trim() || 'Item';
-            const maxCraftsText = document.getElementById('opt-max-crafts').textContent;
-            const totalItemsText = document.getElementById('opt-total-items').textContent;
-            const totalProfitText = document.getElementById('opt-total-profit').textContent;
-            const capitalUsedText = document.getElementById('opt-capital-used').textContent;
-
-            const rows = document.querySelectorAll('#shopping-list-body tr');
-            let lines = [
-                t('copyHeader', outputName),
-                t('copyCrafts', maxCraftsText, totalItemsText),
-                t('copyCap', capitalUsedText),
-                t('copyProf', totalProfitText),
-                `----------------------------------------`
-            ];
-
-            rows.forEach(row => {
-                const cols = row.querySelectorAll('td');
-                if (cols.length === 3) {
-                    const name = cols[0].childNodes[0].textContent.trim();
-                    const qty = cols[1].querySelector('div:first-child').textContent.trim();
-                    const stack = cols[1].querySelector('div:last-child').textContent.trim();
-                    const cost = cols[2].textContent.trim();
-                    lines.push(`- ${name}: ${qty} (${stack}) -> ${cost}`);
-                }
-            });
-
-            copyToClipboard(lines.join('\n'));
-            showToast(t('toastCopiedList'), 'success');
-        }
-
-        function openJsonModal(mode) {
-            currentJsonMode = mode;
-            const modal = document.getElementById('json-modal');
-            const title = document.getElementById('modal-title');
-            const desc = document.getElementById('modal-desc');
-            const textarea = document.getElementById('json-textarea');
-            const btn = document.getElementById('modal-action-btn');
-
-            if (mode === 'export') {
-                title.textContent = t('modalExportTitle');
-                desc.textContent = t('modalExportDesc');
-                textarea.value = JSON.stringify(savedRecipes, null, 2);
-                textarea.readOnly = true;
-                btn.textContent = t('modalExportBtn');
-            } else {
-                title.textContent = t('modalImportTitle');
-                desc.textContent = t('modalImportDesc');
-                textarea.value = '';
-                textarea.readOnly = false;
-                btn.textContent = t('modalImportBtn');
-            }
-
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
-
-        function closeJsonModal() {
-            const modal = document.getElementById('json-modal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
-
-        function handleJsonAction() {
-            const textarea = document.getElementById('json-textarea');
-            if (currentJsonMode === 'export') {
-                copyToClipboard(textarea.value);
-                showToast(t('toastCopiedJson'), 'success');
-                closeJsonModal();
-            } else {
-                try {
-                    const imported = JSON.parse(textarea.value.trim());
-                    if (!Array.isArray(imported)) throw new Error('Invalid format');
-                    
-                    let addedCount = 0;
-                    imported.forEach(item => {
-                        if (item.name && Array.isArray(item.ingredients)) {
-                            item.id = 'imp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-                            savedRecipes.unshift(item);
-                            addedCount++;
-                        }
-                    });
-
-                    if (addedCount > 0) {
-                        saveToStorage();
-                        showToast(t('toastImported', addedCount), 'success');
-                        closeJsonModal();
-                    } else {
-                        showToast(t('toastNoValidJson'), 'error');
-                    }
-                } catch (e) {
-                    showToast(t('toastInvalidJson'), 'error');
-                }
-            }
-        }
-
-        function copyToClipboard(text) {
-            const temp = document.createElement('textarea');
-            temp.value = text;
-            document.body.appendChild(temp);
-            temp.select();
-            document.execCommand('copy');
-            document.body.removeChild(temp);
-        }
-
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            
-            const colors = {
-                success: 'bg-emerald-950/95 border-emerald-500 text-emerald-200',
-                error: 'bg-red-950/95 border-red-500 text-red-200',
-                info: 'bg-gray-900/95 border-gray-600 text-gray-200'
-            };
-
-            const icons = {
-                success: 'fa-circle-check text-donut-emerald',
-                error: 'fa-circle-exclamation text-donut-red',
-                info: 'fa-circle-info text-donut-gold'
-            };
-
-            toast.className = `${colors[type]} border px-4 py-3 rounded-xl shadow-xl text-xs font-medium flex items-center gap-2.5 transform transition-all duration-300 translate-y-2 opacity-0`;
-            toast.innerHTML = `<i class="fa-solid ${icons[type]} text-base"></i><span>${escapeHtml(message)}</span>`;
-            
-            container.appendChild(toast);
-            
-            requestAnimationFrame(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            });
-
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-2');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.toString()
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
-
-        // ==========================================
-        // 7. DONUT API: ĐỒNG BỘ GIÁ TỪ BUY ORDERS
-        // ==========================================
-        // Dùng một lần gọi danh sách chung /v1/orders, sau đó ghép theo trường item.
-        // limit=2 trong ví dụ tài liệu chỉ trả về 2 dòng mẫu; limit lớn hơn giúp
-        // lấy được nhiều vật phẩm trong cùng một request và tiết kiệm quota.
-        const DONUT_API_BASE_URL = 'https://api.donutapi.app';
-        const DONUT_API_CACHE_MS = 60_000;
-        const DONUT_API_ORDERS_LIMIT = 2000;
-        const donutApiCache = new Map();
-
-        // Tên hiển thị thường gặp -> Minecraft item ID chuẩn.
-        const DONUT_ITEM_ALIASES = {
-            'eye of ender': 'ender_eye',
-            'redstone dust': 'redstone',
-            'strength ii potion (x3)': 'potion',
-            'strength ii potion': 'potion'
-        };
-
-        function donutItemId(name) {
-            const normalizedName = String(name || '')
-                .trim()
-                .toLowerCase()
-                .replace(/^minecraft:/, '')
-                .replace(/\s+/g, ' ');
-
-            if (DONUT_ITEM_ALIASES[normalizedName]) {
-                return DONUT_ITEM_ALIASES[normalizedName];
-            }
-
-            return normalizedName
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .replace(/[^a-z0-9]+/g, '_')
-                .replace(/^_+|_+$/g, '')
-                .replace(/_+/g, '_');
-        }
-
-        async function donutApiGet(path) {
-            const cached = donutApiCache.get(path);
-            if (cached && Date.now() - cached.at < DONUT_API_CACHE_MS) {
-                return cached.data;
-            }
-
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 20_000);
-
-            try {
-                const response = await fetch(`${DONUT_API_BASE_URL}${path}`, {
-                    method: 'GET',
-                    headers: { 'Accept': 'application/json' },
-                    signal: controller.signal
-                });
-
-                let data = {};
-                try {
-                    data = await response.json();
-                } catch (_) {
-                    data = {};
-                }
-
-                if (!response.ok) {
-                    const retryAfter = response.headers.get('Retry-After');
-                    const detail = data.error || `HTTP ${response.status}`;
-                    const error = new Error(`${detail}${retryAfter ? ` (Retry-After: ${retryAfter}s)` : ''}`);
-                    error.status = response.status;
-                    error.retryAfter = retryAfter;
-                    throw error;
-                }
-
-                donutApiCache.set(path, { at: Date.now(), data });
-                return data;
-            } finally {
-                clearTimeout(timeoutId);
-            }
-        }
-
-        async function getDonutOrdersPriceIndex() {
-            const data = await donutApiGet(`/v1/orders?limit=${DONUT_API_ORDERS_LIMIT}`);
-            const orders = Array.isArray(data.orders) ? data.orders : [];
-            const pricesByItem = new Map();
-
-            orders.forEach(order => {
-                const itemId = String(order.item || '').trim().toLowerCase();
-                const price = Number(order.price_each);
-                if (!itemId || !Number.isFinite(price) || price <= 0) return;
-
-                const current = pricesByItem.get(itemId);
-                // Nếu có nhiều lệnh mua cho cùng item, dùng giá price_each cao nhất.
-                if (current === undefined || price > current) {
-                    pricesByItem.set(itemId, price);
-                }
-            });
-
-            return {
-                pricesByItem,
-                orderCount: orders.length,
-                partialSnapshot: data.snapshot?.complete === false,
-                snapshotAt: data.snapshot?.at || null
-            };
-        }
-
-        async function syncDonutApiPrices() {
-            const button = document.getElementById('btn-donut-api-sync');
-            const status = document.getElementById('donut-api-status');
-            const buttonText = document.getElementById('btn-donut-api-sync-text');
-            if (!button || button.disabled) return;
-
-            const rows = Array.from(document.querySelectorAll('.ingredient-row'));
-            const ingredientsById = new Map();
-            rows.forEach(row => {
-                const name = row.querySelector('.ing-name')?.value.trim();
-                const itemId = donutItemId(name);
-                if (name && itemId && !ingredientsById.has(itemId)) {
-                    ingredientsById.set(itemId, name);
-                }
-            });
-
-            const outputName = document.getElementById('output-name').value.trim();
-            const outputItemId = donutItemId(outputName);
-            if (!ingredientsById.size && !outputItemId) {
-                showToast(currentLang === 'vi'
-                    ? 'Hãy nhập tên nguyên liệu hoặc thành phẩm trước.'
-                    : 'Enter an ingredient or output item name first.', 'error');
-                return;
-            }
-
-            button.disabled = true;
-            buttonText.textContent = currentLang === 'vi' ? 'Đang đồng bộ...' : 'Syncing...';
-            status.textContent = t('apiSyncLoading');
-
-            try {
-                // Chỉ một request cho toàn bộ công thức, thay vì gọi từng item riêng lẻ.
-                const snapshot = await getDonutOrdersPriceIndex();
-                const pricesByItem = snapshot.pricesByItem;
-                const updatedIngredientIds = new Set();
-                let missingIngredientIds = new Set();
-
-                rows.forEach(row => {
-                    const name = row.querySelector('.ing-name')?.value.trim();
-                    const itemId = donutItemId(name);
-                    if (!itemId) return;
-
-                    const price = pricesByItem.get(itemId);
-                    if (price !== undefined) {
-                        row.querySelector('.ing-price').value = String(price);
-                        updatedIngredientIds.add(itemId);
-                    } else {
-                        missingIngredientIds.add(itemId);
-                    }
-                });
-
-                const outputPrice = outputItemId ? pricesByItem.get(outputItemId) : undefined;
-                const outputUpdated = outputPrice !== undefined;
-                if (outputUpdated) {
-                    document.getElementById('output-price').value = String(outputPrice);
-                }
-
-                calculateAll();
-
-                const totalIngredients = ingredientsById.size;
-                const updatedIngredients = updatedIngredientIds.size;
-                const matchedItems = new Set(updatedIngredientIds);
-                if (outputUpdated) matchedItems.add(outputItemId);
-
-                const doneText = t(
-                    'apiSyncDone',
-                    updatedIngredients,
-                    totalIngredients,
-                    outputUpdated,
-                    matchedItems.size,
-                    snapshot.orderCount
-                );
-                const warnings = [];
-
-                if (snapshot.partialSnapshot) {
-                    warnings.push(currentLang === 'vi'
-                        ? 'Lưu ý: snapshot orders chưa đầy đủ; vật phẩm không xuất hiện có thể chưa được quét.'
-                        : 'Note: the orders snapshot is incomplete; missing items may not have been scanned.');
-                }
-                if (missingIngredientIds.size || (outputItemId && !outputUpdated)) {
-                    warnings.push(t('apiSyncNoPrice'));
-                }
-                if (!snapshot.orderCount) {
-                    warnings.push(currentLang === 'vi'
-                        ? 'API không trả về lệnh mua nào.'
-                        : 'The API returned no buy orders.');
-                }
-
-                status.textContent = `${doneText}${warnings.length ? ` ${warnings.join(' ')}` : ''}`;
-                const hasAnyUpdate = updatedIngredients > 0 || outputUpdated;
-                showToast(
-                    hasAnyUpdate ? doneText : (warnings[0] || t('apiSyncNoPrice')),
-                    hasAnyUpdate ? 'success' : 'error'
-                );
-            } catch (error) {
-                const message = error?.message || 'Donut API request failed';
-                status.textContent = message;
-                showToast(message, 'error');
-            } finally {
-                button.disabled = false;
-                buttonText.textContent = t('btnSyncDonutApi');
-            }
-        }
-
-        // Khởi chạy ứng dụng khi tải xong trang
-        window.onload = initApp;
-    </script>
+<body>
+<aside id="side"></aside>
+<div id="wrap">
+  <div id="top"><button id="burger" aria-label="Mở menu">☰</button><b>Donut Console</b></div>
+  <main id="main"></main>
+</div>
+<datalist id="items"></datalist>
+
+<script>
+/* ============ CẤU HÌNH ============ */
+const API_KEY = "dk_JnJFtbsUHKkqGbYHNryDKC5n6gyQDNAr";   // Dán key dạng dk_... vào đây (không bắt buộc). Để trống = chế độ keyless (10 lần/phút).
+const BASE = "https://api.donutapi.app";
+/* ================================== */
+
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const num = n => n == null ? "–" : Number(n).toLocaleString("en-US", { maximumFractionDigits: 2 });
+const short = n => { if (n == null) return "–"; n = +n; const a = Math.abs(n); for (const [u, s] of [[1e12, "T"], [1e9, "B"], [1e6, "M"], [1e3, "K"]]) if (a >= u) return +(n / u).toFixed(2) + s; return +n.toFixed(2) + ""; };
+const dt = ms => ms ? new Date(ms).toLocaleString("vi-VN") : "–";
+const ago = ms => { if (!ms) return "–"; const s = Math.max(0, (Date.now() - ms) / 1000 | 0); return s < 60 ? s + " giây trước" : s < 3600 ? (s / 60 | 0) + " phút trước" : s < 86400 ? (s / 3600 | 0) + " giờ trước" : (s / 86400 | 0) + " ngày trước"; };
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const hue = s => Math.abs([...String(s)].reduce((a, c) => (a * 31 + c.charCodeAt(0)) | 0, 7)) % 360;
+const st = (l, v, sub = "") => `<div class="st"><span>${esc(l)}</span><b>${esc(v)}</b><span>${esc(sub)}</span></div>`;
+const table = (cols, rows, empty = "Không có dữ liệu.") => rows.length ? `<div class="tw"><table><thead><tr>${cols.map(c => `<th class="${c.c || ""}">${c.h}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${cols.map(c => `<td class="${c.c || ""}">${c.f(r)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>` : `<p class="muted">${empty}</p>`;
+const itemLink = i => `<a href="#/ah/${encodeURIComponent(i)}">${esc(i)}</a>`;
+const playerLink = p => `<a href="#/player/${encodeURIComponent(p)}">${esc(p)}</a>`;
+
+/* ---------- API ---------- */
+const cache = new Map();
+async function api(path, { ttl = 60000, timeout = 20000 } = {}) {
+  const c = cache.get(path);
+  if (ttl && c && Date.now() - c.t < ttl) return c.d;
+  const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), timeout);
+  const headers = API_KEY ? { Authorization: "Bearer " + API_KEY } : {};
+  let r;
+  try { r = await fetch(BASE + path, { headers, signal: ctl.signal }); }
+  catch (e) { throw new Error(e.name === "AbortError" ? "Quá thời gian chờ, thử lại sau." : "Không kết nối được tới API."); }
+  finally { clearTimeout(tm); }
+  quota(r);
+  let d = null; try { d = await r.json(); } catch { }
+  if (r.status === 202) return { _pending: true, ...d };
+  if (!r.ok) {
+    const e = new Error((d && d.error) || "Lỗi HTTP " + r.status); e.status = r.status; e.retry = r.headers.get("retry-after");
+    throw e;
+  }
+  if (ttl) cache.set(path, { t: Date.now(), d });
+  return d;
+}
+function quota(r) {
+  const g = h => r.headers.get(h), p = g("x-ratelimit-plan");
+  if (!p) return;
+  $("#quota").innerHTML = `Gói: <b>${esc(p)}</b><br>Còn ${esc(g("x-ratelimit-remaining-minute"))}/${esc(g("x-ratelimit-limit-minute"))} lần phút này<br>Còn ${num(g("x-ratelimit-remaining-month"))} lần tháng này`;
+}
+let itemsLoaded = false;
+async function ensureItems() {
+  if (itemsLoaded) return; itemsLoaded = true;
+  try { const d = await api("/v1/ah/items", { ttl: 600000 }); $("#items").innerHTML = d.items.map(i => `<option value="${esc(i.item)}">`).join(""); } catch { itemsLoaded = false; }
+}
+const itemBox = (v = "", id = "item") => `<input id="${id}" list="items" placeholder="vd: netherite_ingot" value="${esc(v)}" autocomplete="off">`;
+
+/* ---------- Biểu đồ SVG ---------- */
+function chart(pts, { w = 900, h = 260, fmt = short, tfmt = ms => new Date(ms).toLocaleString("vi-VN", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) } = {}) {
+  if (pts.length < 2) return `<p class="muted">Chưa đủ điểm dữ liệu để vẽ biểu đồ.</p>`;
+  const xs = pts.map(p => p.x), ys = pts.map(p => p.y), x0 = Math.min(...xs), x1 = Math.max(...xs);
+  let y0 = Math.min(...ys), y1 = Math.max(...ys); if (y0 === y1) { y0 -= 1; y1 += 1; }
+  const P = { l: 58, r: 12, t: 12, b: 26 }, X = x => P.l + (x - x0) / (x1 - x0 || 1) * (w - P.l - P.r), Y = y => P.t + (1 - (y - y0) / (y1 - y0)) * (h - P.t - P.b);
+  const d = pts.map((p, i) => (i ? "L" : "M") + X(p.x).toFixed(1) + " " + Y(p.y).toFixed(1)).join("");
+  let g = "";
+  for (let i = 0; i <= 4; i++) { const v = y0 + (y1 - y0) * i / 4, y = Y(v); g += `<line class="g" x1="${P.l}" x2="${w - P.r}" y1="${y}" y2="${y}"/><text x="${P.l - 6}" y="${y + 4}" text-anchor="end">${esc(fmt(v))}</text>`; }
+  [0, .5, 1].forEach((f, i) => { const t = x0 + (x1 - x0) * f; g += `<text x="${X(t)}" y="${h - 6}" text-anchor="${i === 0 ? "start" : i === 2 ? "end" : "middle"}">${esc(tfmt(t))}</text>`; });
+  return `<svg class="chart" viewBox="0 0 ${w} ${h}" role="img">${g}<path d="${d}" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>`;
+}
+
+/* ---------- Các màn hình ---------- */
+async function vStatus(el) {
+  const d = await api("/v1/status", { ttl: 15000 }), b = d.bots_summary || {}, s = (d.donutsmp || [])[0] || {}, t = d.traffic || {};
+  el.innerHTML = `<div class="stats">
+    ${st("DonutSMP", s.online ? "Online" : s.online === false ? "Offline" : "Chưa rõ", s.host || "")}
+    ${st("Người chơi", num(s.players_online), "tối đa " + num(s.players_max))}
+    ${st("Ping", s.latency_ms != null ? s.latency_ms + " ms" : "–", "đo từ máy chủ ở Đức")}
+    ${st("Bot trong game", `${b.online ?? "–"}/${b.total ?? "–"}`, b.state || "")}
+    ${st("Snapshot AH", ago(d.ah?.ts), `${d.ah?.pages ?? 0} trang${d.ah?.complet ? "" : " (chưa đủ)"}`)}
+    ${st("Snapshot Orders", ago(d.orders?.ts), `${d.orders?.pages ?? 0} trang${d.orders?.complet ? "" : " (chưa đủ)"}`)}
+    ${st("Lưu lượng API", t.level || "–", `${t.requests_per_minute ?? 0} req/phút · hàng đợi ${t.player_queue ?? 0}`)}</div>
+    ${table([{ h: "Bot", f: r => `<span class="dot ${r.online ? "on" : ""}"></span>${esc(r.name)}` }, { h: "Trạng thái", f: r => esc(r.state) }, { h: "Việc đang làm", f: r => esc(r.task || "–") }, { h: "Thấy lần cuối", f: r => ago(r.last_seen) }, { h: "Uptime 24h", c: "n", f: r => r.uptime_24h == null ? "–" : (r.uptime_24h * 100).toFixed(1) + "%" }], d.bots || [])}`;
+}
+
+async function vUptime(el, [h = "24"]) {
+  el.innerHTML = `<form class="bar"><select id="hrs">${[1, 6, 24, 72, 168, 720].map(x => `<option ${x == h ? "selected" : ""} value="${x}">${x} giờ</option>`).join("")}</select><button>Xem</button></form><div id="out"></div>`;
+  $("form", el).onsubmit = e => { e.preventDefault(); location.hash = "#/uptime/" + $("#hrs").value; };
+  const d = await api("/v1/status/history?hours=" + h, { ttl: 30000 }), s = d.servers || [];
+  $("#out").innerHTML = `<p class="note">Lịch sử bắt đầu ghi từ ${dt(d.logging_since)}. Khoảng trống nghĩa là API đang khởi động lại, không phải server sập.</p>` +
+    s.map(v => `<div class="panel"><b>${esc(v.name)}</b> <span class="muted">${esc(v.host)} · uptime ${v.uptime == null ? "–" : (v.uptime * 100).toFixed(2) + "%"}</span>
+      <p class="muted" style="margin:10px 0 2px">Người chơi online</p>${chart(v.points.filter(p => p.players != null).map(p => ({ x: p.at, y: p.players })))}
+      <p class="muted" style="margin:10px 0 2px">Ping (ms)</p>${chart(v.points.filter(p => p.latency_ms != null).map(p => ({ x: p.at, y: p.latency_ms })), { h: 180, fmt: n => n.toFixed(0) })}
+      ${v.outages?.length ? table([{ h: "Bắt đầu", f: o => dt(o.from) }, { h: "Kết thúc", f: o => o.to ? dt(o.to) : "đang diễn ra" }, { h: "Lỗi", f: o => esc(o.error || "") }], v.outages) : `<p class="muted">Không ghi nhận gián đoạn.</p>`}</div>`).join("");
+}
+
+async function vAhItems(el) {
+  const d = await api("/v1/ah/items", { ttl: 120000 });
+  let all = d.items || [], lim = 200;
+  el.innerHTML = `<p class="note">Snapshot ${ago(d.snapshot?.at)} · ${all.length} loại item. Item có dấu ★ được tìm trực tiếp trong game nên giá thấp nhất là giá thật; item còn lại đến từ lượt quét một phần nên kém chắc chắn hơn.</p>
+    <form class="bar"><input id="f" placeholder="Lọc theo tên item"><select id="o"><option value="n">Tên A–Z</option><option value="pa">Giá thấp → cao</option><option value="pd">Giá cao → thấp</option><option value="l">Nhiều listing nhất</option></select></form><div id="out"></div>`;
+  const draw = () => {
+    const f = $("#f", el).value.trim().toLowerCase().replace(/ /g, "_"), o = $("#o", el).value;
+    let r = all.filter(i => i.item.includes(f));
+    if (o === "pa") r.sort((a, b) => a.lowest_unit_price - b.lowest_unit_price); if (o === "pd") r.sort((a, b) => b.lowest_unit_price - a.lowest_unit_price); if (o === "l") r.sort((a, b) => b.listings - a.listings);
+    $("#out", el).innerHTML = table([{ h: "Item", f: i => itemLink(i.item) + (i.priced_at ? " ★" : "") }, { h: "Giá thấp nhất / cái", c: "n", f: i => short(i.lowest_unit_price) + ` <span class="muted">(${num(i.lowest_unit_price)})</span>` }, { h: "Listing", c: "n", f: i => num(i.listings) }, { h: "Tổng số lượng", c: "n", f: i => num(i.total_count) }], r.slice(0, lim)) +
+      (r.length > lim ? `<p class="muted">Hiển thị ${lim}/${r.length}. <a href="#" id="more">Hiện thêm</a></p>` : "");
+    const m = $("#more", el); if (m) m.onclick = e => { e.preventDefault(); lim += 300; draw(); };
+  };
+  $("#f", el).oninput = draw; $("#o", el).onchange = draw; draw();
+}
+
+async function vAh(el, [item = ""]) {
+  ensureItems();
+  el.innerHTML = `<form class="bar">${itemBox(item)}<button>Tìm offer</button></form><div id="out"></div>`;
+  $("form", el).onsubmit = e => { e.preventDefault(); const v = $("#item").value.trim().toLowerCase().replace(/ /g, "_"); if (v) location.hash = "#/ah/" + encodeURIComponent(v); };
+  if (!item) return $("#out").innerHTML = `<p class="muted">Nhập id item (chữ thường, gạch dưới) hoặc chọn từ <a href="#/ahitems">danh sách tổng quan</a>.</p>`;
+  $("#out").innerHTML = `<p class="muted">Đang tìm trong game… item ít phổ biến có thể mất 4–9 giây.</p>`;
+  const d = await api("/v1/ah?item=" + encodeURIComponent(item) + "&limit=45", { ttl: 60000, timeout: 25000 }), l = d.listings || [];
+  $("#out").innerHTML = `<p class="note">Dữ liệu ${ago(d.snapshot?.at)} · ${d.snapshot?.source === "search" ? "tìm trực tiếp trong game (giá thấp nhất là giá thật)" : "lượt quét một phần, danh sách có thể thiếu"} · <a href="#/history/${encodeURIComponent(item)}/ah/24">xem lịch sử giá</a></p>` +
+    (l.length ? `<div class="stats">${st("Giá thấp nhất / cái", short(l[0].unit_price), num(l[0].unit_price))}${st("Số offer", l.length)}</div>` : "") +
+    table([{ h: "Item", f: r => esc(r.name || r.item) }, { h: "Số lượng", c: "n", f: r => num(r.count) }, { h: "Tổng giá", c: "n", f: r => short(r.price) + ` <span class="muted">(${num(r.price)})</span>` }, { h: "Giá / cái", c: "n", f: r => short(r.unit_price) }], l, "Không tìm thấy offer. Danh sách rỗng không chứng minh item không được bán.");
+}
+
+async function vOrders(el, [item = ""]) {
+  ensureItems();
+  el.innerHTML = `<form class="bar">${itemBox(item)}<button>Lọc</button></form><div id="out"></div>`;
+  $("form", el).onsubmit = e => { e.preventDefault(); const v = $("#item").value.trim().toLowerCase().replace(/ /g, "_"); location.hash = "#/orders" + (v ? "/" + encodeURIComponent(v) : ""); };
+  const d = await api("/v1/orders?limit=200" + (item ? "&item=" + encodeURIComponent(item) : "")), o = d.orders || [];
+  $("#out").innerHTML = `<p class="note">Snapshot ${ago(d.snapshot?.at)}${d.snapshot?.complete === false ? " · chưa đủ, danh sách chỉ là một phần" : ""}.</p>` +
+    table([{ h: "Item", f: r => itemLink(r.item) + ` <span class="muted">${esc(r.name || "")}</span>` }, { h: "Giá mua / cái", c: "n", f: r => short(r.price_each) }, { h: "Đã giao", c: "n", f: r => short(r.delivered) }, { h: "Cần", c: "n", f: r => short(r.wanted) }, { h: "Tiến độ", f: r => { const p = r.wanted ? Math.min(100, r.delivered / r.wanted * 100) : 0; return `<div class="bar2" title="${p.toFixed(1)}%"><i style="width:${p}%"></i></div>`; } }], o);
+}
+
+async function vHistory(el, [item = "", type = "ah", hours = "24"]) {
+  ensureItems();
+  el.innerHTML = `<form class="bar">${itemBox(item)}<select id="ty"><option value="ah" ${type === "ah" ? "selected" : ""}>Auction house</option><option value="orders" ${type === "orders" ? "selected" : ""}>Buy orders</option></select><select id="hr">${[6, 24, 72, 168, 720].map(x => `<option value="${x}" ${x == hours ? "selected" : ""}>${x} giờ</option>`).join("")}</select><button>Xem</button></form><p class="note">Không có key chỉ xem được tối đa 24 giờ. Gói cao hơn xem được lâu hơn.</p><div id="out"></div>`;
+  $("form", el).onsubmit = e => { e.preventDefault(); const v = $("#item").value.trim().toLowerCase().replace(/ /g, "_"); if (v) location.hash = `#/history/${encodeURIComponent(v)}/${$("#ty").value}/${$("#hr").value}`; };
+  if (!item) return;
+  const d = await api(`/v1/history?item=${encodeURIComponent(item)}&type=${type}&hours=${hours}`), p = d.points || [];
+  if (!p.length) return $("#out").innerHTML = `<p class="muted">Chưa có điểm dữ liệu cho item này trong khoảng thời gian đã chọn.</p>`;
+  const f = p[0].price, l = p[p.length - 1].price, mn = Math.min(...p.map(x => x.price)), mx = Math.max(...p.map(x => x.price)), ch = f ? (l - f) / f * 100 : 0;
+  $("#out").innerHTML = `<div class="stats">${st("Giá gần nhất", short(l), num(l))}${st("Thấp nhất", short(mn))}${st("Cao nhất", short(mx))}${st("Thay đổi", (ch >= 0 ? "+" : "") + ch.toFixed(1) + "%", p.length + " điểm")}</div>
+    <div class="panel"><b>Giá</b>${chart(p.map(x => ({ x: x.at, y: x.price })))}</div><div class="panel"><b>Số listing</b>${chart(p.map(x => ({ x: x.at, y: x.listings })), { h: 180, fmt: n => n.toFixed(0) })}</div>`;
+}
+
+function vChat(el, [q = ""]) {
+  el.innerHTML = `<p class="note">Tên người chơi không bao giờ hiện: mỗi người chỉ có một mã ẩn danh cố định. Nội dung do người chơi viết, được hiển thị dạng văn bản thuần. Tự cập nhật mỗi 10 giây (giữ dưới giới hạn 10 lần/phút của keyless).</p>
+    <form class="bar"><input id="q" placeholder="Tìm trong lịch sử chat (tối đa 6 từ)" value="${esc(q)}"><button>Tìm</button>${q ? `<button type="button" class="ghost" id="clr">Về chat trực tiếp</button>` : `<button type="button" class="ghost" id="pz">Tạm dừng</button>`}<span id="stt" class="muted"></span></form><div id="feed" class="feed"></div>`;
+  const feed = $("#feed", el); let last = 0, paused = false, busy = false;
+  $("form", el).onsubmit = e => { e.preventDefault(); const v = $("#q").value.trim(); location.hash = "#/chat" + (v ? "/" + encodeURIComponent(v) : ""); };
+  const c = $("#clr", el); if (c) c.onclick = () => location.hash = "#/chat";
+  const row = m => `<div class="msg"><span class="au" style="color:hsl(${hue(m.author)} 55% 45%)">${esc(m.author)}</span><span class="tx">${esc(m.text)}</span><time>${new Date(m.at).toLocaleTimeString("vi-VN")}</time></div>`;
+  async function load(first) {
+    if (busy) return; busy = true;
+    try {
+      const d = await api(q ? `/v1/chat?limit=100&q=${encodeURIComponent(q)}` : first ? "/v1/chat?limit=100" : `/v1/chat?limit=100&after=${last}`, { ttl: 0 });
+      const near = feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 80;
+      if (first) feed.innerHTML = "";
+      if (!d.messages.length && first) feed.innerHTML = `<p class="muted" style="padding:10px 14px">Không có tin nhắn.</p>`;
+      feed.insertAdjacentHTML("beforeend", d.messages.map(row).join(""));
+      last = d.latest_id ?? last;
+      if (first || near) feed.scrollTop = feed.scrollHeight;
+      $("#stt", el).textContent = "";
+    } catch (e) { $("#stt", el).textContent = e.message + (e.retry ? ` (thử lại sau ${e.retry}s)` : ""); }
+    busy = false;
+  }
+  load(true);
+  if (!q) {
+    const pz = $("#pz", el); pz.onclick = () => { paused = !paused; pz.textContent = paused ? "Tiếp tục" : "Tạm dừng"; };
+    later(() => { if (!paused) load(false); }, 10000);
+  }
+}
+
+async function vDaily(el, [day = ""]) {
+  el.innerHTML = `<form class="bar"><input id="day" type="date" value="${esc(day)}"><button>Xem</button></form><div id="out"></div>`;
+  $("form", el).onsubmit = e => { e.preventDefault(); location.hash = "#/daily" + ($("#day").value ? "/" + $("#day").value : ""); };
+  let d;
+  try { d = await api("/v1/chat/daily" + (day ? "?day=" + encodeURIComponent(day) : ""), { ttl: 300000 }); }
+  catch (e) { if (e.status === 404) return $("#out").innerHTML = `<p class="muted">Ngày này chưa có dữ liệu chat.</p>`; throw e; }
+  const mx = Math.max(1, ...(d.top_words || []).map(w => w.count));
+  $("#out").innerHTML = `<p class="note">Ngày ${esc(d.day)} (UTC)${d.partial ? " · ngày chưa kết thúc, số liệu cập nhật mỗi giờ" : ""}.</p>
+    <div class="stats">${st("Tin nhắn", num(d.messages))}${st("Người nhắn", num(d.authors))}${st("Giờ sôi động nhất", d.busiest_hour ? d.busiest_hour.hour + ":00 UTC" : "–", d.busiest_hour ? num(d.busiest_hour.messages) + " tin" : "")}${st("Nhắn nhiều nhất", d.top_chatter?.author || "–", d.top_chatter ? num(d.top_chatter.messages) + " tin" : "")}</div>
+    ${d.top_chatter?.head ? `<p><img src="${esc(d.top_chatter.head)}" width="48" height="48" alt="Đầu nhân vật của người nhắn nhiều nhất" style="image-rendering:pixelated;border-radius:6px"></p>` : ""}
+    <div class="panel"><b>Từ được nói nhiều nhất</b><div style="margin-top:8px">${(d.top_words || []).map(w => `<div style="display:flex;gap:10px;align-items:center;margin:4px 0"><span style="width:110px">${esc(w.word)}</span><div class="bar2" style="flex:1"><i style="width:${w.count / mx * 100}%"></i></div><span class="n muted" style="width:64px;text-align:right">${num(w.count)}</span></div>`).join("") || `<span class="muted">Không có.</span>`}</div></div>
+    ${d.topics?.length || d.summary ? `<div class="panel"><b>Chủ đề và tóm tắt</b> <span class="tag warn">AI ước tính, có thể sai</span>${(d.topics || []).map(t => `<div style="margin:6px 0">${esc(t.label)} <span class="muted">~${Math.round(t.share * 100)}%</span></div>`).join("")}${d.summary ? `<p>${esc(d.summary)}</p>` : ""}${d.summary_model ? `<span class="muted">Mô hình: ${esc(d.summary_model)}</span>` : ""}</div>` : ""}`;
+}
+
+async function vRich(el, [n = "50"]) {
+  el.innerHTML = `<form class="bar"><select id="n">${[25, 50, 100, 200].map(x => `<option value="${x}" ${x == n ? "selected" : ""}>Top ${x}</option>`).join("")}</select><button>Xem</button></form><div id="out"></div>`;
+  $("form", el).onsubmit = e => { e.preventDefault(); location.hash = "#/rich/" + $("#n").value; };
+  const d = await api("/v1/leaderboard/money?limit=" + n, { ttl: 120000 });
+  $("#out").innerHTML = `<p class="note">Snapshot ${ago(d.snapshot?.at)} · tính năng beta · số tiền được game làm tròn 2–3 chữ số có nghĩa.</p>` +
+    table([{ h: "Hạng", c: "n", f: r => r.rank }, { h: "Người chơi", f: r => playerLink(r.player) }, { h: "Số tiền", c: "n", f: r => `<b>${short(r.money)}</b> <span class="muted">(${num(r.money)})</span>` }], d.players || []);
+}
+
+async function vPlayer(el, [name = ""]) {
+  el.innerHTML = `<form class="bar"><input id="nm" placeholder="Tên Java, hoặc Bedrock có dấu chấm đầu" value="${esc(name)}" maxlength="16"><button>Tra cứu</button></form><div id="out"></div>`;
+  $("form", el).onsubmit = e => { e.preventDefault(); const v = $("#nm").value.trim(); if (v) location.hash = "#/player/" + encodeURIComponent(v); };
+  if (!name) return $("#out").innerHTML = `<p class="muted">Nhập tên người chơi để xem thống kê. Lần đầu có thể mất 2–6 giây, kết quả được cache 10 phút.</p>`;
+  const out = $("#out"); let d;
+  try {
+    for (let i = 0; i < 6; i++) {
+      out.innerHTML = `<p class="muted">Đang hỏi game${i ? ` (lần thử ${i + 1})` : ""}…</p>`;
+      d = await api("/v1/player/" + encodeURIComponent(name), { ttl: 600000, timeout: 25000 });
+      if (!d._pending) break; await sleep((d.retry_in_seconds || 5) * 1000);
+    }
+  } catch (e) {
+    if (e.status === 404) return out.innerHTML = `<p class="muted">Game báo người chơi này không tồn tại.</p>`;
+    if (e.status === 400) return out.innerHTML = `<p class="muted">Tên người chơi không hợp lệ (2–16 ký tự).</p>`;
+    if (e.status === 503) return out.innerHTML = `<div class="err">Đang có quá nhiều lượt tra cứu chờ xử lý. Thử lại sau ít phút.</div>`;
+    throw e;
+  }
+  if (d._pending) return out.innerHTML = `<div class="err">Game chưa phản hồi. Thử lại sau ít phút.</div>`;
+  const s = d.stats || {}, kd = s.deaths ? (s.kills / s.deaths).toFixed(2) : "–";
+  out.innerHTML = `<h2 style="margin:0 0 10px">${esc(d.player)}</h2><p class="note">Đọc ${ago(d.at)}${d.cached ? " (từ cache)" : ""} · số liệu được game làm tròn.</p>
+    <div class="stats">${st("Tiền", short(s.money), num(s.money))}${st("Kills", num(s.kills))}${st("Deaths", num(s.deaths))}${st("K/D", kd)}${st("Thời gian chơi", s.playtime || "–")}
+    ${s.shards != null ? st("Shards", num(s.shards)) : ""}${s.blocks_placed != null ? st("Block đặt", num(s.blocks_placed)) : ""}${s.blocks_broken != null ? st("Block phá", num(s.blocks_broken)) : ""}${s.mobs_killed != null ? st("Mob giết", num(s.mobs_killed)) : ""}</div>`;
+}
+
+async function vStaff(el, [mode = "online"]) {
+  el.innerHTML = `<form class="bar"><select id="m"><option value="online" ${mode === "online" ? "selected" : ""}>Đang online</option><option value="all" ${mode === "all" ? "selected" : ""}>Tất cả đã thấy</option></select><button>Xem</button></form><div id="out"></div>`;
+  $("form", el).onsubmit = e => { e.preventDefault(); location.hash = "#/staff/" + $("#m").value; };
+  const all = mode === "all", d = await api(all ? "/v1/staff" : "/v1/staff/online", { ttl: 30000 }), s = d.staff || [];
+  const role = r => r.role ? `<span class="tag">${esc(r.role)}</span>` : `<span class="muted">chưa rõ</span>`;
+  $("#out").innerHTML = `<p class="note">Đây là "staff được bot nhìn thấy online", không phải toàn bộ staff. Staff đang ẩn sẽ không xuất hiện, nên vắng mặt không chứng minh họ offline.</p>` +
+    table(all
+      ? [{ h: "Tên", f: r => esc(r.player) + (r.previous_name ? ` <span class="muted">(trước: ${esc(r.previous_name)})</span>` : "") }, { h: "Vai trò", f: role }, { h: "Trạng thái", f: r => `<span class="dot ${r.online ? "on" : ""}"></span>${r.online ? "online" : "offline"}${r.spectator ? " · spectator" : ""}` }, { h: "Thấy lần cuối", f: r => ago(r.last_seen) }, { h: "Thấy lần đầu", f: r => dt(r.first_seen) }]
+      : [{ h: "Tên", f: r => esc(r.player) }, { h: "Vai trò", f: role }, { h: "Chế độ", f: r => r.spectator ? "spectator" : "bình thường" }], s, "Hiện không thấy staff nào online.");
+}
+
+async function vStaffAct(el, [days = "30"]) {
+  el.innerHTML = `<form class="bar"><select id="d">${[1, 7, 14, 30, 90].map(x => `<option value="${x}" ${x == days ? "selected" : ""}>${x} ngày</option>`).join("")}</select><button>Xem</button></form><div id="out"></div>`;
+  $("form", el).onsubmit = e => { e.preventDefault(); location.hash = "#/staffact/" + $("#d").value; };
+  const d = await api("/v1/staff/activity?days=" + days, { ttl: 600000 });
+  const bars = a => { const m = Math.max(1, ...a); return `<svg width="144" height="26" viewBox="0 0 144 26" role="img" aria-label="Phút online theo giờ trong ngày">${a.map((v, i) => `<rect x="${i * 6}" y="${26 - v / m * 24}" width="5" height="${Math.max(v ? 1 : 0, v / m * 24)}" fill="var(--mint)"/>`).join("")}</svg>`; };
+  $("#out").innerHTML = `<p class="note">Log bắt đầu từ ${dt(d.logging_since)}; nếu mới chỉ vài ngày thì chưa đủ để kết luận thói quen. Thời gian là mức tối thiểu (chỉ tính lúc bot thấy staff). Múi giờ: ${esc(d.timezone)}.</p>` +
+    table([{ h: "Tên", f: r => esc(r.player) }, { h: "Vai trò", f: r => esc(r.role || "–") }, { h: "Tổng phút", c: "n", f: r => num(r.total_minutes) }, { h: "Phiên", c: "n", f: r => num(r.sessions) }, { h: "Trung vị/phiên", c: "n", f: r => r.median_session_minutes + " phút" }, { h: "Giờ hay online", f: r => (r.usual_hours || []).map(h => h + "h").join(", ") || "–" }, { h: "Theo giờ (0–23)", f: r => bars(r.minutes_by_hour || []) }, { h: "Thấy lần cuối", f: r => ago(r.last_seen) }], d.staff || []);
+}
+
+async function vMods(el) {
+  el.innerHTML = `<p class="note">Chợ mod của Donut API: người mua trả trực tiếp cho người bán trong game, không hoàn tiền được. Điểm quét chỉ tìm mã độc đã biết, không đảm bảo file an toàn. Màn hình này chỉ xem danh sách; việc mua cần làm trên trang mod.</p><div class="cards" id="c"></div><p><button class="ghost" id="more" hidden>Tải thêm</button></p>`;
+  let before = null;
+  const verdict = v => `<span class="tag ${v === "OK" ? "ok" : v === "ATTENTION" ? "warn" : "bad"}">${esc(v)}</span>`;
+  async function load() {
+    const d = await api("/v1/market/mods?limit=24" + (before ? "&before=" + before : ""), { ttl: 60000 });
+    $("#c").insertAdjacentHTML("beforeend", (d.mods || []).map(m => `<div class="panel"><b>${esc(m.name)}</b> <span class="muted">${esc(m.version || "")}</span><p class="muted" style="margin:4px 0 8px">${esc(m.description || "Không có mô tả.")}</p>
+      <div>${verdict(m.scan?.verdict)} <span class="tag">${short(m.price)} · người bán ${esc(m.seller)}</span></div>
+      ${(m.scan?.findings || []).map(f => `<div class="muted" style="font-size:13px">• ${esc(f.severity)}: ${esc(f.title)}</div>`).join("")}
+      <p class="muted" style="font-size:12.5px;margin:8px 0 0">${esc(m.file?.name)} · ${num((m.file?.size || 0) / 1024)} KB<br>sha256: ${esc((m.file?.sha256 || "").slice(0, 20))}…</p><a href="${esc(m.page_url)}" target="_blank" rel="noopener">Mở trang mod</a></div>`).join("") || `<p class="muted">Chưa có mod nào.</p>`);
+    before = d.next_before; $("#more").hidden = !before;
+  }
+  $("#more").onclick = () => load().catch(e => alert(e.message));
+  await load();
+}
+
+/* ---------- Điều hướng ---------- */
+const NAV = [
+  ["Thị trường", [["ahitems", "Tổng quan Auction House", "Giá thấp nhất và số listing của từng item.", vAhItems], ["ah", "Offer theo item", "Danh sách offer rẻ nhất của một item.", vAh], ["orders", "Buy orders", "Các lệnh mua đang mở.", vOrders], ["history", "Lịch sử giá", "Biểu đồ giá và số listing theo thời gian.", vHistory]]],
+  ["Cộng đồng", [["chat", "Chat công khai", "Theo dõi và tìm kiếm chat của server.", vChat], ["daily", "Thống kê chat theo ngày", "Số tin, từ khóa và giờ sôi động.", vDaily]]],
+  ["Người chơi", [["rich", "Bảng xếp hạng tiền", "Những người giàu nhất server (beta).", vRich], ["player", "Tra cứu người chơi", "Tiền, K/D, thời gian chơi (beta).", vPlayer], ["staff", "Staff", "Staff mà bot thấy trong danh sách người chơi (beta).", vStaff], ["staffact", "Hoạt động của staff", "Khung giờ staff thường online (beta).", vStaffAct]]],
+  ["Hệ thống", [["status", "Trạng thái", "Bot, server DonutSMP và độ mới của dữ liệu.", vStatus], ["uptime", "Lịch sử server", "Người chơi, ping và các lần gián đoạn.", vUptime]]],
+  ["Chợ mod", [["mods", "Mod đang bán", "Danh sách mod bán bằng tiền trong game.", vMods]]]
+];
+const ROUTES = Object.fromEntries(NAV.flatMap(g => g[1]).map(r => [r[0], r]));
+$("#side").innerHTML = `<div class="brand"><svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#e8559a"/><circle cx="16" cy="16" r="5" fill="#2a1830"/><g stroke-width="2.4" stroke-linecap="round"><path d="M8 10l2 1" stroke="#fff"/><path d="M22 8l-1 2" stroke="#ffd166"/><path d="M25 17l-2 0" stroke="#7fe0d6"/><path d="M20 25l-1-2" stroke="#fff"/><path d="M9 21l2-1" stroke="#ffd166"/></g></svg>Donut Console</div>` +
+  NAV.map(([g, rs]) => `<div class="grp">${g}</div>` + rs.map(r => `<a class="nav" data-r="${r[0]}" href="#/${r[0]}">${r[1]}</a>`).join("")).join("") + `<div id="quota">Chưa có lượt gọi nào.</div>`;
+$("#burger").onclick = () => $("#side").classList.toggle("open");
+
+let timers = [], gen = 0;
+const later = (f, ms) => timers.push(setInterval(f, ms));
+async function route() {
+  timers.forEach(clearInterval); timers = []; const my = ++gen;
+  const [name, ...args] = (location.hash.replace(/^#\/?/, "") || "ahitems").split("/").map(s => s);
+  const r = ROUTES[name] || ROUTES.ahitems;
+  document.querySelectorAll("#side a.nav").forEach(a => a.classList.toggle("on", a.dataset.r === r[0]));
+  $("#side").classList.remove("open"); $("#wrap").scrollTop = 0;
+  const m = $("#main"); m.innerHTML = `<h1>${r[1]}</h1><p class="sub">${r[2]}</p><div id="view"><p class="muted">Đang tải…</p></div>`;
+  const v = $("#view");
+  try {
+    v.innerHTML = "";
+    await r[3](v, args.map(a => { try { return decodeURIComponent(a) } catch { return a } }));
+  } catch (e) {
+    if (my !== gen) return;
+    const extra = e.status === 429 ? (e.retry ? ` Chờ ${e.retry} giây rồi thử lại.` : "") : e.status === 401 ? " Kiểm tra lại API_KEY trong code." : "";
+    v.insertAdjacentHTML("beforeend", `<div class="err">${esc(e.message)}${extra}</div>`);
+  }
+}
+addEventListener("hashchange", route);
+route();
+</script>
 </body>
 </html>
